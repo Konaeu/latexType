@@ -1,0 +1,14 @@
+Review summary:
+Weaknesses:
+	>:While the premise and proposed solution seem compelling, the paper seems very crudely formulated and is hard to understand. My concerns are towards the soundness of the solution design and the formulation of its parameters.
+	>: complexity (time) and energy consumption of the constraint problem not evaluated
+	>: UPA and TPC (2009) too easy as targets for comparison
+	>: yet to prove that the resource allocation scheme is optimal
+Detailed Comments:
+	Abstract:
+	>:- The authors need to describe what they mean by "dynamic links."
+	>:- Give an example of a data accident that could occur from delayed data.
+	>:- The proposed method of adapting the transmission rate is a "rate adaptation" problem, which has been addressed exhaustively in research.
+	>:First of all, the proposed mechanism is based on the computation of solving an optimization problem (even after transformation to GGP). It is not clear which of the nodes in the WBAN will be performing the computation. 
+	>:the paper started by stating that WBAN nodes are resource constrained, including the computation resource. Without an analysis/evaluation of the computation complexity and an implementation of the proposed methods on the WBAN nodes, it is rather far-fetched how would the proposed methods would really help.
+	>:A minor concern is that the proposed methods depend on posture detection.The cost of detecting the postures might not be negligible and it is not entirely clear the gain in the end and in practice will be significant.

@@ -1,0 +1,677 @@
+\def\CTeXPreproc{Created by ctex v0.2.14, don't edit!}
+%% bare_conf.tex
+%% V1.3
+%% 2007/01/11
+%% by Michael Shell
+%% See:
+%% http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.7 or later) with an IEEE conference paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/
+%% and
+%% http://www.ieee.org/
+
+
+\documentclass[conference]{IEEEtran}
+
+
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{cite}
+\usepackage[labelfont=bf,labelsep=quad]{caption}
+\usepackage{booktabs}
+%\usepackage[bookmarks=true]{hyperref}
+\renewcommand{\algorithmicrequire}{\textbf{Initialization:}}
+\renewcommand{\algorithmicensure}{\textbf{Itertion:}}
+\renewcommand{\algorithmicreturn}{\textbf{Return:}}
+
+
+
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{Dynamic Energy-efficient Optimal Resource Allocation with QoS Support in Wireless Body Area Networks}
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+\author{\IEEEauthorblockN{Zhiqiang Liu and Bin Liu}
+\IEEEauthorblockA{School of Information Science and Technology\\
+University of Science and Technology of China\\
+Hefei,Anhui,230027,P.R.China\\
+Email: lzhq28@mail.ustc.edu.cn,flowice@ustc.edu.cn}
+\and
+\IEEEauthorblockN{Chang Wen Chen}
+\IEEEauthorblockA{Computer Science and Engineering Department\\
+University at Buffalo,the State University of New York\\
+Buffalo,NY,14260-2000 USA\\
+Email: chencw@buffalo.edu}}
+
+
+
+
+% use for special paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+
+
+
+
+% make the title area
+\maketitle
+\begin{abstract}
+%\boldmath
+
+Wireless Body Area Networks(WBAN) emerging as a key technology to improve the healthcare efficiency have three major challenges needed to overcome. They are the limited resource, the dynamic link characteristics and the quality of service (QoS). In this paper, we propose the transmission rate allocation policy and dynamic optimal resource allocation method to improve energy efficiency with QoS support in different posture.
+We first propose the transmission rate allocation policy(TRAP) to allocate the transmission rates at each sensor to try best to satisfy the PLR constraints with the minimum cost when we cannot satisfy the packet loss rate constraint with the maximum transmission rate even if the transmission power has been set to the maximum value. Then we jointly optimize the transmission power and the scheduled slots at each sensor as the QoS optimization problem to minimize energy consume, subject to the QoS constraints such as the delay constraint, throughput constraint and packet loss rate constraint. And the QoS optimization problem is converted into a generalized geometric programming (GGP) which can be solved efficiently.
+Numerical results demonstrate that the proposed transmission rate allocation policy can guarantee more stricter PLR constraint, and the optimal resource allocation improve the system energy efficiency with satisfying QoS constraints.
+\end{abstract}
+\textbf{Keywords:}
+ Wireless body area network (WBAN) , quality of service (QoS), energy efficiency, transmission rate allocation policy, optimal resource allocation, generalized geometric programming (GGP)
+
+
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+% no \IEEEPARstart
+
+With the rapid increase of the ageing population, the healthcare cost for the elderly is more and more expensive than of other age groups. Many applocations based on Wireless body area networks (WBAN) \cite{myReference:WBAN:App1} emerges as promising approaches to improve healthcare efficiency. In February 2012, the final version of the standard of WBAN called IEEE 802.15.6 \cite{myReference:WBAN:Standard} was published by the Task Group (TG6) after nearly five years' work of many brilliant scientists. The publishing of 802.15.6 tremendously facilitates the development of WBAN. However, there are still several unique research issues needed to be overcome in the context of WBAN.
+
+
+Firstly,the heterogeneous WBAN system is a resource-constrained system. Considering the need of lightweight and non-instrusive, the size of body sensors is limited. Since the size of the battery and the processor is corresponding to small, the resource of body sensors such as processing, storage and battery energy supply is extremely constrained comparing with ordinary wireless sensors. Additionally, replacing the batteries will cause the interruption of health monitoring, which is not expected and also may be fatal while the critical data is not captured in time.
+
+
+Secondly, dynamic link characteristics should be taken seriously. Channel fading seen by links of on-body sensors is subject to the distance between the transmitter and receiver and a number of factors such as clothing, obstructions due to different body segments, sensor antenna orientation and the like \cite{myReference:Posture:BodyPosture}. When the posture changes, some factors of the link will inevitably change. Therefore, on-body sensor networks have to deal with such link dynamisms caused by the changing of the posture.
+
+
+The last but not the least, wireless body area networks (WBAN) are heterogeneous networks which consist of a set of resource-constraint body sensors and an abundant-resource hub. These resource-constraint body sensors acquire the vital data streams, then transmit them to the hub through the dynamic links. In health monitoring systems, a loss or an excessive delay of the vital data streams acquired by body sensors may cause a fatal accident \cite{myReference:Optimal:Resource}. Therefore, guaranteeing the quality of service (QoS) of WBAN, such as outage rate, throughput, packet loss rate and latency, becomes an important research issue \cite{myReference:WBAN:QoS}.
+
+
+In this paper, we optimize the posture-based resource allocation with IEEE 802.15.6 Scheduled Access Mechanisms for star-topology WBAN to provide an energy efficient and high quality service to these wireless on-body sensors. Our contributions in this paper are listed as follows:
+
+
+We jointly optimize the transmit power, the transmission rate and numbers of scheduled slots at the hub when the posture changes to provide QoS guarantee to the delivery of data streams. The QoS optimization problem is converted into a Generalized Geometric Programming(GGP) which can be solved efficiently.
+
+
+The remainder of this paper is organized as follows: Section~\ref{relatedWork} discusses the related work. Section~\ref{systemModel} presents the detail of system models. In Section~\ref{QoSConstraint}, we describe the QoS constraints of on-body sensors. We solve the optimization problem in Section~\ref{dynamicResourceAllocation}. The simulation results are provided in Section~\ref{simulation}, and the conclusion are drawn in Section \ref{conclusion}.
+
+
+% \subsubsection{Subsubsection Heading Here}
+\section{Related work}\label{relatedWork}
+In this section, we firstly review the most notable surveys on the transmission power control that primarily takes the transmission power into consideration for achieving an energy efficiency result. Secondly, we discuss the relevant works that deal with the QoS problem. Finally, we talk about the optimization approaches that improve the efficiency of the energy or resource of on-body resource-constraint sensors, which are the main focuses in this paper.
+
+
+Communication is the most energy cost operation while the energy consumption of processing and listening can be ignored \cite{myReference:Energy:Human}. Therefore, transmission power control as a classic approach of reducing communication cost has been studied in \cite{myReference:TPC:Prediction,myReference:TPC:TPCandLA,myReference:TPC:MLearning,myReference:TPC:Healthcare}. For adapting the transmission power, received signal strength indicator(RSSI), which is used to measure channel gain, is an important metric\cite{myReference:TPC:Prediction,myReference:TPC:Healthcare} . The paper in \cite{myReference:TPC:Healthcare} outlined that the wireless link quality can change rapidly using the empirical evidence and the fixed transmit power would result in wasted energy or low reliability. In \cite{myReference:TPC:Prediction}, the authors presented a novel channel prediction utilizing the partial-periodicity of measured BAN channels. In addition, machine learning ways have been used for power control. Such as reinforcement learning with approximation used to mitigate internetwork interference for dynamic power control was proposed in\cite{myReference:TPC:MLearning}. However, these power control methods generally only considered one metric such as throughput or packet loss rate (PLR) as the constraint, which cannot satisfy the QoS of WBAN.
+
+
+In \cite{myReference:WBAN:QoS}, the authors outlined that quality of service(QoS) issues in WBAN should be taken up more seriously due to the sensitivity of WBAN application and the trade-offs of QoS factors should be studied carefully. In order to achieve better performance of QoS, some MAC protocols have been designed to make corresponding adjustment and improvement with regard to the dynamic channel and limited resource\cite{myReference:QoS:Slot,myReference:MAC:BodyMAC}. In addition, a novel method called BodyQoS \cite{myReference:QoS:BodyQoS}developed a virtual MAC which allowed a BodyQoS to schedule wireless resources without knowing the details of the underlying MAC protocols and be able to provide adaptive resource scheduling.
+
+
+Optimization approaches are mathematical methods which can find the global or local optimal solution of the energy-efficient and resource-allocation problem effectively in theory. Authors in \cite{myReference:Optimal:Resource} optimized the resource allocation to provide a sustainable and high-quality service in health monitoring systems while considered both the power supply and the quality of service (QoS). Two optimization problems were formulated for minimizing the rate fluctuation with respect to the average sustainable rate and optimizing the transmission power and the transmission, respectively. However, they did many researches on energy harvesting and ignored the first-hop communications from a body sensor to the hub via wireless channels which should be studied carefully. In paper \cite{myReference:Optimal:Convex}, the latency as an important metric of QoS was taken into full account while minimizing energy consumption. Because of that it focused on the polling-based communication protocols, the flexibility was restricted. Plus, the packet loss rate regarded as another vital parameter for WBAN was not taken seriously.
+
+
+Few works have appeared in the literature which took into account body postures improving simultaneously energy-efficiency and data reliability \cite{myReference:Optimal:EnergyAndCost,myReference:Posture:BodyPosture}. In \cite{myReference:Posture:BodyPosture}, the dynamic nature of on-body links with varying body postures was first characterized, using experimental results from a prototype wearable sensor network. Then the authors proposed dynamic postural position inference (DPPI) mechanism for assigning the best possible power level to a link ,which based on the observed linear relationship between the Transmission Power(TP) and Received Signal Strength Indicator(RSSI) which was studied and described in \cite{myReference:TPC:ATPC} . However, the linear relationship between TP and RSSI was studied in wireless sensor networks, in which the wireless sensors usually were located in a fixed position. So it may be inappropriate for some postures such as fast running, in which the position of wireless sensors changed rapidly. Relaying and cooperation are two mechanisms that can improve the network lifetime. The author in \cite{myReference:Optimal:EnergyAndCost} jointly studied the data routing and relay positioning problem, then formulated a mixed integer linear programing model which optimized the number and location of relays and the data routing to minimize both installation cost and energy consumed by wireless sensors. However, additional relays placed on body sometimes were not acceptable for patients. Particularly, when the number of the biosensors was already large, the additional relays would seriously influence the experience of wearing.
+In summary, none of the above reviewed works has introduced an optimization framework for designing the energy-efficient WBAN with adequately considering quality of service (QoS). The joint consideration of the quality of service, energy constraint and the dynamic links caused by changing of the postures is not taken into and will be the main focus of this paper.
+
+
+To our knowledge, we are the first to provide an optimization framework that maximizes the energy efficiency while fully considering both quality of service (QoS) constraints, such as average packet loss rate, delay and throughput, and the characteristics of the dynamic links with different postures in a WBAN scenario.
+
+\section{System model}\label{systemModel}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.3\textwidth]{WBAN.eps}
+\caption{A typical structure of WBAN}
+\label{WBAN}
+\end{figure}
+
+\subsection{Network Setting}
+
+In WBAN, communication is the most energy consuming operation for a sensor node, but we can optimize it at multiple layers of the communication stack \cite{myReference:TPC:Healthcare}. At the network layer, star and tree topologies are both recommended in IEEE 802.15.6 standards \cite{myReference:WBAN:Standard}. However, considering the energy of each node is extremely limited and additional relay nodes can bring uncomfortable user experience, one hop star topology is hereby used in this paper. As shown in Fig.~\ref{WBAN}, N resource-constraint body sensors attached to the body acquire the vital health data and send them to the hub directly. And the hub with abundant resources collects the data from all the sensor nodes and transmits them to the remote processing center through Wi-Fi, cellular network, etc.
+
+
+At the data-link layer, energy can be saved by an appropriate medium access control (MAC) protocol design. Fortunately, a configurable energy-efficient MAC protocol design framework is proposed for both medical and entertainment applications in IEEE 802.15.6 standards. Through the framework, we can design and configure a MAC protocol based on our needs. In this paper, we only consider the medical sensor nodes which have high energy efficiency requirements. And we need to reallocate the resource by the hub when the body posture changes. So we adopt the scheduled access mechanism in beacon mode with superframe boundaries. In beacon mode, the hub can broadcast beacons to define the superframe boundaries and reallocate the slots. In addition, the scheduled access mechanism is chosen because dedicated slot allocation naturally avoid collisions, idle listening, and overhearing of sensor nodes, and sensor nodes only need to be active in its dedicated slot which can save energy.
+
+
+At the physical layer, the Industrial, Scientific, and Medical(ISM) band can support high-data-rate applications and is available worldwide. Differential Phase Shift Keying (DPSK) modulation is used in the ISM band recommended in \cite{myReference:WBAN:Standard}. Furthermore, four level information data rates are optional through configuring the parameters related to the BCH code rate and modulation order.
+
+
+\subsection{Energy Model}
+In a wireless sensor area network (WBAN), transmission energy consumption at an energy-constraint sensor is the most part of the total energy consumption while the energy consumption of processing and listening can be negligible \cite{myReference:Energy:Human,myReference:TPC:Healthcare}. Furthermore, the size of ACK packets is much smaller than the data packet. So the energy consumption for receiving the ACK packet at a sensor is so smaller comparing with the data packet that we can ignore it and only take the energy consumption for transmitting the data packet into consideration. The transceiver energy consumption mainly consist of two parts: circuitry energy consumptions  and transmit amplifier energy consumptions ${E_{tx}}$ \cite{myReference:Energy:protocol}. A popular energy model assumes that the transceiver energy consumption is proportional to the RF transmit energy \cite{myReference:Energy:Transceiver}. So the formula of the energy model is shown as the following:
+
+\begin{equation}
+E = {E_{elec}}{\text{ + }}{E_{tx}}{\text{ = }}\alpha {P_{tx}}   t
+\end{equation}
+
+In addition, the energy consumption at the transmitter is assumed to not change with the data rate in the case of the IEEE 802.15.6 compliant transmitter with DBPSK modulation. Because switching from $\pi /2$ DBPSK to $\pi /2$ DQPSK for a high level data rate is only possible by employing the quadrature modulator circuitry, which will not significantly increase in the transceiver electronics \cite{myReference:TPC:TPCandLA}.
+
+
+\subsection{Channel Model}
+The human body is not an ideal medium for Radio Frequency (RF) wave transmission due to the complexity of the human tissues structure, body shape and the movement and posture of human body. Therefore the propagation of wireless signals experiences high fading which has been studied in \cite{myReference:Channel:BAN,myReference:Channel:Statistical,myReference:Channel:Characterization}. An accurate characterization of the On-body channel model as an important step in the development of a wireless body area network (WBAN) deserves further investigation, but is out of the scope of this paper. Fortunately, the IEEE 802.15.6 channel modeling subcommittee has provided the recommendations on how the channel model for WBAN can be used in \cite{myReference:Channel:BAN}.
+
+
+In this paper, we focus on the on-body propagation model and exploit the path loss results presented in \cite{myReference:Channel:BAN}. The path loss mode in dB between the transmitting and the receiving antennas can be modeled as the function of the distance $d$  based on the Friis formula in free space using the following equation \cite{myReference:Channel:BAN,myReference:Channel:Characterization}:
+
+\begin{equation}
+PL_{Fr}(d) = {P_{0,dB}} + 10n{\log _{10}}\left( {\frac{d}{{{d_0}}}} \right)
+\end{equation}
+
+Where ${P_{0,dB}}$ is the path loss at a reference distance ${d_0}$ , and $n$ is the path-loss exponent.
+
+
+Due to the variation in the environment surrounding of body or movement of the body parts, the path loss will be different from the mean value for a given distance as show in equation(2), and the phenomenon is called shadowing. With considering shadowing, the total path loss can be expressed by \cite{myReference:Channel:BAN}:
+
+\begin{equation}
+PL\left( d \right) =PL_{Fr}(d) + {X_\sigma }
+\end{equation}
+
+
+Where the shadowing ${X_\sigma }$ in $dB$ follows a normal distribution $N\left( {0,\sigma } \right)$, while the shadowing ${X_\sigma }$ in $mW$ follows a log-normal distribution .
+
+
+Furthermore, the shadowing strictly depends on the movement condition and the way of moving of each human subject\cite{myReference:Channel:Statistical} . The standard deviation of the shadowing  varies correspondingly with the posture of human body, such as still, walk and run. Therefore, body postures, which have the great impact on the characterization of the wireless channel, will be carefully taken into account when we design the resource optimization problem.
+
+\begin{table}
+\caption{Parameters of each node}
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+\textbf{Node Index }& \textbf{Location} & \textbf{${d}$ (cm)}& \textbf{LOS/NLOS} &\textbf{${n}$}  &\textbf{${P_{0,dB}}$}  \\
+\midrule
+1   &	Head	& 69	& LOS	& 3.11	&35.2\\
+\midrule
+2	& Chest	  &  36	& LOS	&3.23	&41.2\\
+\midrule
+3	& R wrist	&48	&NLOS	& 3.35	&32.2\\
+\midrule
+4	& Thigh	& 34	&    NLOS	&  3.45	   &32.5\\
+\midrule
+5	& Foot	&  100	&   LOS	    &   3.11    &35.2\\
+\bottomrule
+\end{tabular}
+\end{center}
+\label{parNode}
+\end{table}
+
+\begin{table}
+\caption{Shadowing standard deviation ${\sigma _{{S}}}$ in ${dB}$}
+\begin{center}
+\begin{tabular}{cccc}\toprule
+~&\multicolumn{3}{c}{${\sigma _{{S}}}$}\\
+\cmidrule{2-4}
+Node Index & Still  & Walk  & Run\\ \midrule
+1   &  6.054   &	5.4153	&  6.1118\\ \midrule
+2   &  4.8497	&    7.4276	&    7.8011 \\ \midrule
+3   &  5.113	&     4.9736&    4.5625   \\ \midrule
+4   &  2.6356	&    4.4678	&    4.0395  \\ \midrule
+5   &  2.2796	&    3.6547	&    2.6646  \\ \bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Queuing Model}
+Like \cite{myReference:MAC:TrafficAdaptive}, we can classify the WBAN traffic into normal, emergency traffic. Normal traffic is generated on periodic basis and should be carefully handled. While emergency traffic is totally nonperiodic and should be taken seriously. Here, each sensor can classify the arriving packets into two classes: normal packets and emergency packets, which are correspondingly put into the normal queue and the emergency queue. Packets in different queues are treated respectively with different requirements. For example, the delay of the emergency packets is shorter than the delay of the normal packets, and the packet loss rate of emergency packets should be smaller than normal packets.
+
+
+For normal traffic, we assume the periodic arrivals of the normal ${A_{i,n}}$  at node i are a constant during a superframe. So the probability density function of ${A_{i,n}}$ can be formulated as follows:
+
+\begin{equation}
+Pr \left( {{A_{i,n}} = c} \right) =
+\begin{cases}
+1 & c = {\lambda _{i,n}}\\
+0 & \text{else}
+\end{cases}
+\end{equation}
+
+
+Where ${S_{i,n}}$ is the average source rate of normal traffic at node $i$, $T$ is the length of the superframe, and $L _{i,n}$ is the length of the normal packet at node $i$, $\lambda _{i,n} = \frac{{{S_{i,n}}   T}}{{{L_{i,n}}}}$ is the average arrivals of the normal packets.
+
+
+We model each sensor transmitting the normal packet as a $D/G/1$ queuing system. Where the arrivals of normal packets is a constant. And the service rate $\mu$ follows a Binomial Distribution in consideration of the existence of the packet loss. In the beacon mode with superframe boundaries, we take the length of the superframe as the basic unit. The upper boundary of average queue delay ${W_q}$ of the $D/G/1$ queuing model can be expressed using the following inequation, which is given by \cite{myReference:Book:Queuing}:
+
+\begin{equation}
+W_q \le \dfrac{\lambda {\sigma _B^2}}{2\left( {1 - \rho } \right)}  T
+\end{equation}
+
+
+Where $\rho    = \frac{\lambda }{\mu }$, $\mu  =  \frac{{\left( {1 - PLR} \right)   R   t}}{L}$, $\sigma _B^2 = \frac{{PLR   \left( {1 - PLR} \right)   R   t}}{L}$. $R$ is the data rate of transmitting the packet to the hub. $t$ is the length of scheduled time. $PLR$ is the packet loss rate.
+
+
+For emergency traffic, we assume the arrivals of the emergency packets $A_{i,m}$ at node $i$ follow a Poisson process with an average rate $\lambda _{i,m}$ during a superframe. And the probability density function of $A_{i,m}$ can be formulated as follow:
+
+\begin{equation}
+Pr \left( {{A_{i,m}} = c} \right) =
+\begin{cases}
+{\frac{{{{\left( {{\lambda _{i,m}}} \right)}^c}{e^{ - {\lambda _{i,m}}}}}}{{c!}}} & c \ge 0 \\
+0 & c < 0
+\end{cases}
+\end{equation}
+
+
+Where ${S_{i,m,ave}}$ is the average source rate of the emergency traffic at node $i$, $L_{i,m}$ is the length of the emergency packet at node $i$. $\lambda _{i,m} = \frac{{{S_{i,m,ave}}   T}}{{{L_{i,m}}}}$ is the arrivals of the emergency packets at node $i$.
+
+
+As well as normal traffic, the service rate $\mu$ follows a Binomial Distribution due to the packet loss. So we can model the emergency packet transmission process as a $M/G/1$ queuing model. The average queuing delay of the emergency packet is given by \cite{myReference:Book:Queuing}:
+
+\begin{equation}
+W_q = \dfrac{{{{\rho ^2}} \mathord{\left/
+ {\vphantom {{{\rho ^2}} {\lambda  + \lambda    \sigma _B^2}}} \right.
+ \kern-\nulldelimiterspace} {\lambda  + \lambda   \sigma _B^2}}}{2(1 - \rho )}  T
+\end{equation}
+
+
+Where $\mu  =  \frac{{\left( {1 - PLR} \right)   R   t}}{L}$, $\sigma _B^2 = \frac{{PLR   \left( {1 - PLR} \right)   R   t}}{L}$, $\rho    = \frac{\lambda }{\mu }$.
+
+
+\section{QoS Constraint} \label{QoSConstraint}
+We consider three QoS metrics, the packet loss rate(PLR), the throughput and the delay, of the normal and emergency packets respectively.
+\subsection{Packet Loss Rate Constraint}
+The packet loss rate is not only related to the path loss, but also to the modulation and the data rate. In the ISM band, the sensor data firstly need to be coded using BCH codes, then the coded data go through the Differential Phase Shift Keying (DPSK) modulator to be further transmitted by the antenna to the hub as recommended in \cite{myReference:WBAN:Standard}. So bit Signal to Noise Ratio (bit SNR) can be expressed as
+
+\begin{equation}
+{\gamma } =  {10^{\frac{{{P_{tx,dB}} - PL\left( d \right) - {P_{N}}}}{{10}}}}   \frac{B}{R}
+\end{equation}
+
+Where ${P_{tx,dB}}$ indicates the transmission power in $ dB$, $PL\left( d \right)$ is the path loss which is given in equation(3). ${P_{N}}$ is the power of noise, $B$ is the system bandwidth, $R$ is the transmission rate.
+The bit error rate performance using the DPSK modulation is given by \cite{myReference:Book:Wireless}
+
+\begin{equation}
+{P_{b,D}}({\gamma }) = \frac{1}{2}\exp{( - {\gamma })}
+\end{equation}
+
+Furthermore, the bit error rate performance can be improved by the BCH code,which can be expressed as following, given by \cite{myReference:Book:Wireless}.
+
+\begin{equation}
+{P_{b,B}}({\gamma }) \approx {P_{b,D}}({\gamma })-{P_{b,D}}({\gamma }){(1-{P_{b,D}}({\gamma }))^{n - 1}}
+\end{equation}
+
+Where $n$ is the length of the BCH code.
+If a packet is received in error, the sensor will retransmit it. We assume the bit errors occur independently in a packet. Therefore, the Packet Loss Rate (PLR) can be given by
+
+\begin{equation}
+PLR({\gamma }) = 1 - {\left( {1 - {P_{b,B}}({\gamma })} \right)^L}
+\end{equation}
+
+Where $L$ is the length of the packet.
+However, we cannot know in advance what the path loss is in the current superframe due to the time-varying channel. Especially, when body postures change, we cannot estimate the path loss appropriately based on the history of the link. Fortunately, the statistical features of the shadowing can be obtained through experiments. So here, we calculate the average packet loss rate for different postures based on the statistical features of the shadowing. The average packet loss rate constraint can be obtained as
+\begin{equation}\label{eqPLR}
+\begin{split}
+\overline{PLR} & = \int\limits_0^{ + \infty } {PLR({\gamma})} P({\gamma}|{\mu _{{\gamma _{dB}}}},{\sigma _{{\gamma _{dB}}}})d{\gamma } \\
+    & \le PL{R_{th}}
+%({\mu _{{\gamma _{b,dB}}}},{\sigma _{{\gamma _{b,dB}}}})
+\end{split}
+\end{equation}
+
+
+Where $PL{R_{th}}$ is the upper boundary of the average packet loss rate, which can be set according to the performance of the system. $P({\gamma })$ indicates the probability density function of the bit Signal to Noise Ratio (SNR), and it follows a Log-normal distribution like the shadowing in $mW$.
+
+\begin{equation}
+P({\gamma }) = \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{\gamma }}}\exp \left[ { - \frac{{{{(10lo{g_{10}}({\gamma })-{\mu _{{\gamma _{dB}}}})}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]
+%|{\mu _{{\gamma _{b,dB}}}},{\sigma _{{\gamma _{b,dB}}}}
+\end{equation}
+
+Where ${\mu _{{\gamma _{dB}}}}$ denotes the mean of ${\gamma }$ in $dB$. ${\sigma _{{\gamma _{dB}}}}$ is the standard deviation of the ${\gamma }$ in $dB$. While the body postures change, the standard deviation ${\sigma _{{\gamma _{dB}}}}$ of the shadowing will change \cite{myReference:Channel:Statistical}. In addition, the average packet loss rate will decrease with the increase of ${\mu _{{\gamma _{dB}}}}$ and the proof details is given in Appendix 1.2. So we can get the threshold $\mu _{th}$ of ${\mu _{{\gamma _{dB}}}}$ with which the average PLR just meets the PLR constraint \eqref{eqPLR}, while ${\sigma _{{\gamma _{dB}}}}$ is decided in line with the current posture.
+
+So the average packet loss rate constraint \eqref{eqPLR} can be transformed into the ${\mu _{{\gamma _{dB}}}}$ constraint expressed as the following inequation.
+
+\begin{equation}
+\begin{split}
+{\mu _{{\gamma _{dB}}}} & = E\left[ {10{{\log }_{10}}\left( {\frac{B}{R}} \right) + {P_{tx,dB}} - {PL\left( d \right)}- {P_{N}}} \right]\\
+& = 10{\log _{10}}\left[ {{P_{tx}}   \frac{B}{R}} \right] -PL_{Fr}\left( {d}\right) - {P_{N}}\\
+& \ge \mu _{th}
+\end{split}
+\end{equation}
+After the conversion, the packet loss rate constraint \eqref{eqPLR} is changed to the following equivalent form:
+\begin{equation}\label{FinalEqPLR}
+\begin{split}
+P_{tx}   {R^{{ - 1}}} & \ge {B^{ - 1}}   {10^{\frac{{\mu _{th}+ PL_{Fr}\left({d}\right) + {P_{N}}}}{{10}}}} = {\theta _{th}}
+\end{split}
+\end{equation}
+
+\subsection{Throughput Constraint}
+For both normal traffic and emergency traffic, the queuing system needs to satisfy the throughput condition, $\mu  \ge \lambda $, in order to be stable \cite{myReference:Book:Queuing}. \\
+For normal traffic, the throughput constraint $\mu _{i,n} \ge \lambda _{i,n}$ at sensor $i$ can be expressed as
+
+\begin{equation}\label{throughputNor}
+\begin{split}
+\frac{{\left( {1 - PL{R_{i,n,th}}} \right)   R_{i,n}   t_{i,n}}}{{{L_{i,n}}}}
+& \ge \frac{{{S_{i,n}}   T}}{{{L_{i,n}}}}
+\end{split}
+\end{equation}
+For emergency traffic, the throughput constraint $\mu _{i,m} \ge \lambda _{i,m}$ is formulated as follows:
+\begin{equation}\label{throughputEmer}
+\begin{split}
+\frac{{\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}   t_{i,m}}}{{{L_{i,m}}}}
+& \ge \frac{{{S_{i,m,ave}}   T}}{{{L_{i,m}}}}
+\end{split}
+\end{equation}
+
+\subsection{Delay Constraint}
+The total delay that a packet suffers should contain three components: Access delay (${W_a}$), Propagation delay(${W_p}$) and Queuing delay (${W_q}$) \cite{myReference:Queue:Delay}.
+
+\begin{equation}
+W = {W_a}{\text{ + }}{W_q}{\text{ + }}{W_p}
+\end{equation}
+
+Where access delay ${W_a}$ is the time between the packet arrival and the beginning of the scheduled slots in the next superframe. This is simply because we will measure the queue size only at the beginning of dedicated slots for normal or emergency traffic at each node. Propagation delay ${W_p}$ is the time from the begin transmission to the end of a packet. Queuing delay ${W_q}$ is the average time that the packet waits in the queue until it is successfully transmitted.
+The average access delay is half of the superframe time $\frac{T}{2}$ when we assume the packets arrive uniformly during each superframe time. Propagation delay is related to the service rate in the queuing system. In addition, the queuing delay is associated with the type of the queuing model for the traffic as described in system model. So different traffics have different delay expressions. Moreover, different traffic types mean different delay requirements. For normal packets, the delay constraint can be expressed as following.
+
+\begin{equation}\label{delayNor}
+\begin{split}
+  W_{i,n}  &= W_{a,i,n} + W_{q,i,n} + W_{p,i,n}\\
+  & \le \frac{T}{2}   + \frac{{\lambda _{_{i,n}}   \sigma _{i,n,B}^2}}{{2\left( {1 - \rho _{i,n}} \right)}}   T+ \frac{t_{i,n}}{{\mu _{i,n}}}\\
+  & \le {D_{i,n,th}}
+\end{split}
+\end{equation}
+For emergency packets, the delay constraint can be written as
+\begin{equation}\label{delayEmer}
+\begin{split}
+  W_{i,m}  &= W_{a,i,m} + W_{q,i,m} + W_{p,i,m}\\
+  & = \frac{T}{2} + \frac{{{{\rho {_{i,m}^2}} \mathord{\left/
+ {\vphantom {{\rho {{_{i,m}}^2}} {\lambda _{_{i,m}} + \lambda _{_{i,m}}   \sigma _{i,m,B}^2}}} \right.
+ \kern-\nulldelimiterspace} {\lambda _{_{i,m}} + \lambda _{_{i,m}}   \sigma _{i,m,B}^2}}}}{{2\left( {1 - \rho _{i,m}} \right)}}   T +\frac{t_{i,m}}{{\mu _{i,m}}}\\
+ & \le {D_{i,m,th}}
+\end{split}
+\end{equation}
+In general, the delay requirement of emergency packets is stricter than normal packets.
+
+
+\section{Dynamic resource allocation}\label{dynamicResourceAllocation}
+\subsection{Transmission rate allocation policy}
+In the heterogeneous wireless body area network, different nodes have different path loss, and some nodes with the maximum transmission rate may cannot satisfy some stricter PLR requirements in some special scenarios even through their transmission power has been the maximum value. Because the packet loss rate will decrease with the increase of bit Signal to Noise Ratio, which has been proved in the Appendix 1.2, reducing the transmission rate can get much larger bit Signal to Noise Ratio under the condition of the same transmission power. Therefore, we can also adjust the transmission rate of each nodes to meet the requirements of packet loss rate as far as possible.
+
+Several situations need to be considered when we design the transmission rate allocation policy.When the PLR requirement is not so strict, nodes with the maximum transmission rate do not need to turn the transmission power up to the maximum value to satisfy the PLR constraint. Moreover, when the PLR requirement becomes stricter due to the changing of the scenario, some nodes with the maximum transmission rate may cannot satisfy the PLR constraint even if the transmission power has been set to the maximum. So now, we need to adjust the transmission rate. However, reducing the transmission rate means increasing the number of allocation slots in a superframe to satisfy the throughput constraint. Therefore, when the number of needed slots due to the decreasing of the transmission rate of many nodes are larger than the maximum number of the superframe, we need to select carefully which nodes' transmission rate should be raised to reduce the number of needed slots until less than the number of the superframe.
+
+\iffalse
+\begin{enumerate}
+  \item  When the PLR requirement is not so strict, nodes with the maximum transmission rate do not need to turn the transmission power up to the maximum value to satisfy the PLR constraint.
+  \item  When the PLR requirement becomes stricter due to the changing of the scenario, some nodes with the maximum transmission rate may cannot satisfy the PLR constraint even if the transmission power has been set to the maximum. So now, we need to adjust the transmission rate.
+  \item However, reducing the transmission rate means increasing the number of allocation slots in a superframe to satisfy the throughput constraint. Therefore, when the number of needed slots due to the decreasing of the transmission rate of many nodes are larger than the maximum number of the superframe, we need to select carefully which nodes' transmission rate should be raised to reduce the number of needed slots until less than the number of the superframe.
+\end{enumerate}
+\fi
+
+Once we need to raise some transmission rates due to the constraint of the maximum number of the superframe, it means that we cannot guarantee each nodes satisfying PLR constraint with current resources. So we need to try our best to reduce the cost due to the raise of the transmission rate. For better choosing nodes to adjust the transmission, we evaluate the cost of each nodes using the following cost function.
+
+\begin{equation}
+{\omega _i} = \frac{{\left| {\mu _{i,th}^{} - \mu _{i,{R_{cur}}}^{}} \right|}}{{\mu _{i,th}^{}}}
+\end{equation}
+
+\begin{equation}
+\mu _{i,{R_{cur}}} = 10{\log _{10}}\left[ {\frac{{{P_{tx,\max }}B}}{{{R_{i,cur}}}}} \right] - PL_{Fr}\left({d_i}\right) - P_{N}
+\end{equation}
+
+Where ${R_{i,cur}}$ indicates the candidate of the transmission rate at node $i$ in the current loop. $\mu _{i,{R_{cur}}}$ is the mean of bit SNR in dB when node $i$ adopts ${R_{i,cur}}$ and the maximum transmission power ${P_{tx,\max}}$.
+
+
+The PLR constraint \eqref{FinalEqPLR} at sensor $i$  can be written as follows
+
+\begin{equation}
+P_{i,tx}   {R_i}^{{-1}} \ge {\theta _{i,th}} = {B^{ - 1}}   {10^{\frac{{\mu _{i,th}+PL_{Fr}\left({d_{i}}\right) + {P_{N}}}}{{10}}}}
+\end{equation}
+
+\begin{equation}
+{\theta _{i,th,new}} = P_{tx,i,\max }   {\left( {R_{i,new}} \right)^{ - 1}}
+\end{equation}
+
+Where ${\theta _{i,th,new}}$ is the new threshold if $R_{i,new}$ is adopted at node $i$.
+Here, the cost function is to use the difference between $\mu _{i,{R_{cur}}}$ with the candidate rate ${R_{i,cur}}$ and $\mu _{i,th}^{}$ to estimate the difference between $PL{R_{i,{R_{cur}}}}$ and $PL{R_{i,th}}$. Because the average PLR is a monotone decreasing function of the argument $\mu $, the farther away from the $\mu _{i,th}$ means the greater the difference between $PL{R_{i,{R_{cur}}}}$ and $PL{R_{i,th}}$, and vice versa.
+In each loop of the algorithm, we select a node which has the minimum cost to adjust its transmission rate. And every time we calculate the cost of each nodes by comparing $\mu _{i,{R_{cur}}}$ with $\mu _{i,th}$. In this way, we can make the overall system PLR performance to achieve equalization and avoid the overregulation of a single node which will lead to too larger PLR.
+
+\begin{algorithm}
+\caption{Transmission Rate Allocation Policy(TRAP)}
+\label{alg:TRAP}
+\begin{algorithmic}[1]
+\REQUIRE ~~\\
+\STATE{${\theta _{i,n,th}},{\theta _{i,m,th}},i \in {N_s}$}
+\STATE{$Rate = \{ Rat{e_1},\cdots,Rat{e_h}\} ,Rat{e_j} < Rat{e_{j + 1}},j < h$}
+\STATE{Calculate the transmission rate threshold ${R_{th}}$ which can satisfy the ${\theta _{th}}$ with the maximum transmission power.}
+\STATE{${R_{th}} = \frac{{{P_{tx,\max }}}}{{{\theta _{th}}}}$}
+\STATE{$\mu _{th}^{} = 10{\log _{10}}\left( {{\theta _{th}}   B} \right) - PL_{Fr}\left(d\right)  - {P_{N}}$}
+\STATE{Obtain the initial ${R_{cur}}$ and $\mu_{{R_{cur}}}$} in accordance with ${R_{th}}$
+\STATE{
+
+${R_{cur} =}$$
+\begin{cases}
+Rat{e_j} & {Rat{e_j} \le {R_{th}} < Rat{e_{j + 1}}}{{\text{ ,1}} \le j < h}\\
+Rat{e_h} & {Rat{e_h} \le {R_{th}}}\\
+Rat{e_1} & {{R_{th}} < Rat{e_1}}\\
+\end{cases}$
+
+}
+\STATE{
+${\mu _{{R_{cur}}} =}$$
+\begin{cases}
+{\mu _{th}} & {{}Rat{e_j} \le {R_{th}} < Rat{e_{j + 1}}{\text{ }},1 \le j < h}\\
+{\mu _{th}} & {Rat{e_h} \le {R_{th}}}\\
+{\frac{{P_{tx,\max }}}{{R_{cur}}}}  & {{R_{th}} < Rat{e_1}}\\
+\end{cases}$
+}
+
+\ENSURE  ~~\\
+
+\STATE{Calculate the sum number $sumSlot$ of slots allocated for each nodes using the current ${R_{cur}}$.}
+\WHILE {$sumSlot > factor   T$}
+\STATE{
+
+${R_{new} =}$$
+\begin{cases}
+R_{cur} & {R_{cur}} = Rat{e_h}\\
+Rat{e_{j+1}} & {Rat{e_j} \le {R_{cur}} < Rat{e_{j + 1}}}\\
+\end{cases}$
+
+}
+\STATE{Calculate the cost assuming ${R_{cur}}$ is set to ${R_{new}}$ at each nodes.}
+\STATE{
+$\mu _{i,{R_{new}}} = 10{\log _{10}}\left( {\frac{{{P_{tx,\max }}}}{{{R_{i,new}}}}}   B \right) - PL_{Fr}\left(d_{i}\right) - {P_{N}} $
+}
+\STATE{
+${{\omega _i} =}$$
+\begin{cases}
+{\frac{{\left| {\mu _{i,th} - \mu _{i,{R_{new}}}} \right|}}{{\mu _{i,th}}}} & {{R_{cur}} < Rat{e_h}}\\
+{\inf }  & {{R_{cur}} = Rat{e_h}}\\
+\end{cases}$
+}
+
+\STATE{Select the node which has the minimum cost by $Index = {\arg _i}\left( {\min \left( {{\omega _i}} \right)} \right)$}
+\STATE{Set ${R_{Index,cur}}$ to ${R_{Index,new}}$,and recalculate the $\mu _{Index,{R_{cur}}}$ as following.}
+\STATE{
+$\mu _{Index,{R_{cur}}} = \frac{{P_{tx,\max }}}{{R_{Index,cur}}}$
+}
+\ENDWHILE
+
+\RETURN ~~\\
+
+\STATE{
+${\theta _{i,th}} = {B^{-1}} {10^{\frac{{\mu _{i,{R_{cur}}}^{}+PL_{Fr}{\left(d_{i}\right)}  + {P_{N}}}}{{10}}}}$
+}
+\STATE{${R_i} = {R_{i,cur}}$}
+
+\end{algorithmic}
+\end{algorithm}
+
+In the rate allocation policy, $factor$ is within the scope of 0 to 1. Here we use $factor$ with considering the additional time slots needed in the following QoS optimization problem. Because the delay constraint may need more slots to be satisfied.
+\subsection{QoS Optimization Problem}
+In this section, we optimize the resource allocation in WBAN to provide QoS guarantee to the vital data. The QoS optimization problem can be stated as: to minimize the sum of the transmission energy consume of all sensors, subject to the power constraint, the requirements of the average PLR, the throughput of each sensor, the delays of all the packets , which have been describled in Section~\ref{QoSConstraint}.
+Mathematically, the problem is formulated as follows:
+% GGP
+\begin{gather}\label{GGP}
+\begin{align*}
+&\min && \sum\limits_{i = 1}^N {\left( {E_{TX,i,n}+ E_{TX,i,m}} \right)}&\\
+&s.t &&\overline {PLR_{i,n}} \le PL{R_{i,n,th}},&\\
+&&&\overline {PLR_{i,m}}  \le PL{R_{i,m,th}},&\\
+&&&\mu _{i,n} \ge \lambda _{i,n},&\\
+&&&\mu _{i,m} \ge \lambda _{i,m},&\\
+&&&W_{i,n} \le {D_{i,n,th}},&\\
+&&&W_{i,m} \le {D_{i,m,th}},&\\
+&&&t_{i,n},t_{i,m} \ge 0,&\\
+&&&\sum\limits_{i = 1}^N {(t_{i,n}} + t_{i,m}) \le T,&\\
+&&&{P_{i,\min ,dBm}} \le P_{i,dBm} \le {P_{i,\max ,dBm}},&
+\end{align*}
+\end{gather}
+
+Where ${P_{tx,i,n}}$ is the transmission power at sensor $i$ for normal packets. ${P_{tx,i,m}}$ is the transmission power at sensor $i$ for emergency packets. ${t_{i,n}}$ is the allotted time at sensor i for normal packets in a superframe. ${t_{i,m}}$ is the allotted time at sensor $i$ for emergency packets in a superframe. $PL{R_{i,n,th}}$ is the threshold of the average PLR for normal packets at sensor $i$. $PL{R_{i,m,th}}$ is the threshold of the average PLR for emergency packets at sensor $i$. ${D_{i,n,th}}$ is the threshold of the delay for normal packets at sensor $i$. ${D_{i,m,th}}$ is the threshold of the delay for emergency packets at sensor $i$. ${P_{i,\min,dBm}}$ is the minimum of the transmission power of the transceiver in $dBm$. ${P_{i,\max ,dBm}}$ is the maximum of the transmission power of the transceiver in $dBm$.
+
+
+\iffalse  %comment
+Once, we bring the parameter value related to QoS constraint in section (QoS constraint уб╫з) to the above optimization problem. The QoS optimization problem can be expressed as follows:
+% GGP futher
+\begin{gather *}
+\begin{align}
+&\min{\text{    }} \sum\limits_{i = 1}^{N = 5} {\left( {\alpha    P_{tx,i,n}   t_{i,n} + \alpha  P_{tx,i,m}  t_{i,m}} \right)}&\\
+&s.t&\\
+&P_{tx,i,n}   {\left( {R_{i,n}} \right)^{ - 1}} \ge {\theta _{i,n,th}},&\\
+&P_{tx,i,m}   {\left( {R_{i,m}} \right)^{ - 1}} \ge {\theta _{i,m,th}},&\\
+&\frac{{\left( {1 - PL{R_{i,n,th}}} \right)   R_{i,n}   t_{i,n}}}{{{L_{i,n}}}} \ge \frac{{{S_{i,n}}   T}}{{{L_{i,n}}}},&\\
+&\frac{{\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}   t_{i,m}}}{{{L_{i,m}}}} \ge \frac{{{S_{i,m}}   T}}{{{L_{i,m}}}},&\\
+&\frac{{{\sigma _{i,n,B}^2}   {S_{i,n}}   T   R_{i,n}   t_{i,n}}}{{2\left( {{L_{i,n}} R_{i,n}   t_{i,n} - \frac{1}{{\left( {1 - PL{R_{i,n,th}}} \right)}}   {L_{i,n}}   {S_{i,n}}   T} \right)}} \hfill \cr
+   &{\text{            }}+ \frac{{{L_{i,n}}}}{{ \left( {1 - PL{R_{i,n,th}}} \right)   R_{i,n}^{}}} \le \left( {{D_{i,n,th}} - \frac{T}{2}} \right),&\\
+&\frac{{\frac{{{L_{i,m}}   {S_{i,m}}   T}}{{\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}^{} t_{i,m}^{}}} + {S_{i,m}}   T   \sigma _{i,m,B}^2}}{{2\left[ {\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}^{}   t_{i,m}^{} - {S_{i,m}}   T} \right]}} \hfill \cr
+   &{\text{            }}+ \frac{{{L_{i,m}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}^{}}} \le \left( {{D_{i,m,th}} - \frac{T}{2}} \right),&\\ \label{test}
+&\sum\limits_{i = 1}^N {(t_{i,n}^{}}  + t_{i,m}^{}) \le T,&\\
+&t_{i,n},t_{i,m} \ge 0,&\\
+&{10^{\frac{{{P_{tx,\min ,dBm}}}}{{10}}}} \le P_{tx,i,n} \le {10^{\frac{{{P_{tx,\max ,dBm}}}}{{10}}}},&\\
+&{10^{\frac{{{P_{tx,\min ,dBm}}}}{{10}}}} \le P_{tx,i,m} \le {10^{\frac{{{P_{tx,\max ,dBm}}}}{{10}}}},&\\
+\end{align}
+\end{gather}
+\fi
+
+We can find that the above problem is very similar to the Generalized Geometric Program (GGP) except the delay constraint \eqref{delayNor}\eqref{delayEmer}. If we can transform the QoS optimization problem into the Generalized Geometric Program (GGP) which can be transformed into a convex optimization problem and can be solved very reliably and efficiently using the optimization toolbox YALMIP \cite{myReference:GGP:YALMIP}. And the transformation from a Generalized Geometric Program (GGP) to a convex problem is handled entirely by YALMIP.
+Fortunately, the article \cite{myReference:GGP} describes some advanced techniques used to express problems in GGP form. One method called function composition can handle the problem we meet in the delay constraints.
+The constraint such as
+
+\begin{equation}
+\frac{{p\left( x \right)}}{{r\left( x \right) - q\left( x \right)}} + f\left( x \right) \le 1
+\end{equation}
+
+Where $r$ is monomial,$p$,$q$ and $f$ are generalized polynomials, and we have the implicit constraint $q\left( x \right) < r\left( x \right)$ . We can replace this inequality constraint with
+
+\begin{equation}
+t + f\left( x \right) \le 1,q\left( x \right) + \frac{{p\left( x \right)}}{t} \le r\left( x \right)
+\end{equation}
+
+Where $t$ is a new variable.Here we assume that the thresholds of average PLR are all less than 50\%, because too larger PLR threshold cannot be accepted in WBAN as described in IEEE 802.15.6 standards.
+
+Once the delay constraints of normal packets \eqref{delayNor} and emergency packets \eqref{delayEmer} can be expressed in generalized posynomials form. Finally, the QoS optimization problem \eqref{GGP} can be expressed in GGP form which can be solved using YALMIP.
+
+\iffalse
+% GGP finally
+\begin{gather}
+\begin{align}
+&\min {\text{    }}\sum\limits_{i = 1}^{N = 5} {\left( {\alpha    P_{tx,i,n}   t_{i,n} + \alpha  P_{tx,i,m}  t_{i,m}} \right)}&\\
+&s.t {\text{    }}P_{tx,i,n}   {\left( {R_{i,n}} \right)^{ - 1}} \ge {\theta _{i,n,th}},&\\
+&P_{tx,i,m}   {\left( {R_{i,m}} \right)^{ - 1}} \ge {\theta _{i,m,th}},&\\
+&\frac{{\left( {1 - PL{R_{i,n,th}}} \right)   R_{i,n}   t_{i,n}}}{{{L_{i,n}}}} \ge \frac{{{S_{i,n}}   T}}{{{L_{i,n}}}},&\\
+&\frac{{\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}   t_{i,m}}}{{{L_{i,m}}}} \ge \frac{{{S_{i,m}}   T}}{{{L_{i,m}}}},&\\
+&\frac{{{L_{i,n}}}}{{ \left( {1 - PL{R_{i,n,th}}} \right)}}   {\left( {R_{i,n}^{}} \right)^{ - 1}} + tmpV_{i,n}^{}  \cr
+ & \le \left( {{D_{i,n,th}} - \frac{T}{2}} \right), \cr &\\
+&\frac{{{L_{i,m}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)}}   {\left( {R_{i,m}^{}} \right)^{ - 1}} + tmpV_{i,m}^{}  \cr
+  &  \le \left( {{D_{i,m,th}} - \frac{T}{2}} \right), \cr,&\\
+&\frac{{PL{R_{i,n,th}}   \left( {1 - PL{R_{i,n,th}}} \right)   {S_{i,n}}   T   {{\left( {R_{i,n}^{} \cdot t_{i,n}^{}} \right)}^2}}}{{{L_{i,n}}}} \cdot {\left( {tmpV_{i,n}^{}} \right)^{ - 1}}  \cr
+  &  + \frac{2}{{\left( {1 - PL{R_{i,n,th}}} \right)}}   {L_{i,n}}   {S_{i,n}}   T \le 2   {L_{i,n}}   R_{i,n}^{}   t_{i,n}^{}, \cr,&\\
+&2   \left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}^{}   t_{i,m}^{} \ge \frac{{{L_{i,m}}   {S_{i,m}}   T}}{{\left( {1 - PL{R_{i,m,th}}} \right)}}   {\left( {R_{i,m}^{}   t_{i,m}^{}} \right)^{ - 1}}   {\left( {tmpV_{i,m}^{}} \right)^{ - 1}}  \cr
+  &  + \frac{{PL{R_{i,m,th}}   \left( {1 - PL{R_{i,m,th}}} \right)   {S_{i,m}}   T   R_{i,m}^{}   t_{i,m}^{}}}{{{L_{i,m}}}}   {\left( {tmpV_{i,m}^{}} \right)^{ - 1}} + 2 {S_{i,m}} T \cr,&\\
+&\sum\limits_{i = 1}^N {(t_{i,n}^{}}  + t_{i,m}^{}) \le T,&\\
+&t_{i,n},t_{i,m} \ge 0,&\\
+&{Rate_{1}} \le R_{i,n}^{},R_{i,m} \le {Rate_{h }},&\\
+&{10^{\frac{{{P_{tx,\min ,dBm}}}}{{10}}}} \le P_{tx,i,n} \le {10^{\frac{{{P_{tx,\max ,dBm}}}}{{10}}}},&\\
+&{10^{\frac{{{P_{tx,\min ,dBm}}}}{{10}}}} \le P_{tx,i,m} \le {10^{\frac{{{P_{tx,\max ,dBm}}}}{{10}}}},&\\
+\end{align}
+\end{gather}
+\fi
+
+
+\section{Simulations}\label{simulation}
+\subsection{Simulation Setting}
+We deploy five sensors and a hub in a WBAN. The five sensors and the hub are placed on the body in accordance with Fig.~\ref{WBAN}. And the detail of each sensor, such as the distance between the sensor and the hub, the location and so on, is given in Appendix 1.1. The WBAN adopts IEEE 802.15.6 protocol and operates 2.4GHz frequency band with 1 KHz bandwidth. The channel coefficients is set based on the measurement results in \cite{myReference:Channel:Statistical,myReference:Channel:Characterization}. And we only consider three types of body postures, still, walk and run, and their steady-state probabilities are set to 0.5, 0.3 and 0.2 \cite{myReference:Posture:MoBAN}. During a superframe, we assume that the path loss for each sensor remains unchanged, because the duration of the slow fading is generally larger that the superframe 100ms \cite{myReference:Channel:Statistical}. The standard deviations of the shadowing for each node in each posture are given by \cite{myReference:Channel:Statistical}, the detail of these standard deviations can be found in Appendix 1.2. In the MAC configuration, the length of the superframe is set to 100ms while the length of one slot is set to 0.5ms. In the physical layer, the transceiver has four optional transmission rates as recommended by IEEE 802.15.6 \cite{myReference:WBAN:Standard} . And the range of the transmission power is -30dBm to 0dBm. The parameter $\alpha $ of the energy mode $E = \alpha {P_{tx}}t$ is set to 3.4 which is an approximate value by fitting the transmission power ${P_{tx}}$ and the total power consumption of the transceiver, given in \cite{myReference:Transceiver:TG6}.
+
+In order to evaluate the performance, we compare our approach with two other approaches. One is the uniform power allocation (UPA) approach that each sensor has the same transmission power, and the other is the transmission power control (TPC) approach \cite{myReference:TPC:Healthcare}. In the UPA approach, each sensor has the same transmission power, and the transmission rates are all set to the maximum. In addition, the time slots for each node need to satisfy the throughput constraint. In the TPC approach, the authors only outline the method of the power control but not give the way of the time slot allocation. So we also set the time slots of TPC to satisfy the throughput constraint with the maximum of the transmission rate.
+However, both of the UPA and TPC approaches cannot set the PLR threshold in advance. Here, we try to adjust the parameters of these approaches to attain the difference performance. Taking into account the different requirements of PLR thresholds under different scenarios, we study the performance comparison of three approaches with the PLR threshold in the range of 0.5\% to 30\%. And the PLR threshold of emergency packets is smaller than the PLR threshold of normal packets in each experiment of our proposed approach. We set the threshold of the queuing delay for normal packets to 200ms and the threshold of the queuing delay for emergency packets to 150ms.
+
+
+
+\subsection{Simulation Results}
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.5\textwidth]{energy-PLR.eps}
+\caption{Relationship between total energy consume and the average packet loss rate of normal packets and emergency packets}
+\label{energyPLR}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.5\textwidth]{energy-Delay.eps}
+\caption{Relationship between the total energy consume and the average delay of normal packets and emergency packets}
+\label{energyDelay}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.5\textwidth]{rateAllocation.eps}
+\caption{Transmission rate allocation result for different nodes in different postures using Transmission Rate Allocation Policy(TRAP)}
+\label{rateAllocation}
+\end{figure}
+
+
+
+We compare results during 10000 superframes among four schemes: 1) the scheme with Uniform Power Allocation (UPA), in which the transmission rate are the optional maximum and the allocated slots can satisfy the throughput constraint, 2) the scheme with Transmission Power Control (TPC), in which the transmission rate are the optional maximum, 3) the scheme with Optimized Resource Allocation without Transmission Rate Allocation Policy (ORA without TRAP) , which is the proposed solution to solve the GGP , and in which the transmission rates for all packets at each sensors are set to the optimal maximum, 4) the scheme with Optimized Resource Allocation with Transmission Rate Allocation Policy (ORA with TRAP), in which the transmission rates at each sensors are set based on the Transmission Rate Allocation Policy(TRAP).
+In Fig.\ref{energyPLR}, we can observe the relationship between the total energy consumption and the mean of the PLRs of all sensors during 10000 superframes, for the normal packets and the emergency packets, respectively. Firstly, we compare the UPA scheme, the TPC scheme and the ORA without TRAP scheme. The ORA without TRAP scheme has the least energy consumption comparing with the TPC scheme and the UPA scheme when they have the same PLR in Fig.\ref{energyPLR}, or when they have the same delay in Fig.\ref{energyDelay}, which means that our proposed Optimized Resource Allocation (ORA) is more energy-efficient when satisfies the same QoS constraints. In addition, the PLRs of the UPA, TPC and the ORA without TRAP schemes all just achieve the threshold of 2.5\% rather than the minimum 0.5\%. Because the path losses of some sensors are much larger, with the maximum transmission rate at sensors, even if the transmission powers have been set to the maximum, the PLR threshold cannot reach the minimum 0.5\%. So all of three schemes cannot satisfy some strict PLR constraints in some scenarios which may be vital while the PLR constrain cannot be satisfied.
+
+Fortunately, the scheme with Optimized Resource Allocation with Transmission Rate Allocation Policy (ORA with TRAP) can satisfy the PLR constraint with reaching the minimum threshold 0.5\% of PLR by using the proposed Transmission Rate Allocation Policy (TRAP), as shown in Fig.\ref{energyPLR}. When the PLR is in the range of 30\% to 2.5\%, the (ORA with TRAP) scheme has the similar curve with the (ORA without TRAP) scheme. However, when the PLR is less than 2.5\%, only the (ORA with TRAP) scheme can satisfy the PLR constraint by adjusting the transmission rates at each sensor, as shown as Fig.\ref{rateAllocation}. But the smaller reachable PLR threshold is at the cost of more energy consume, as shown in Fig\ref{energyPLR}.That is because more slots needed to satisfy the throughput constraint and more time needed to transmit a packet when we decrease the transmission rate using the Transmission Rate Allocation Policy(TRAP). So transmiting an packet will cost more energy. In addition, the propagation delay will increase with decreasing the transmission rate. That is why the delay will increase slightly with the energy consume when the PLR is smaller than 2.5\%. So there is a trade-off between the QoS constraints and the energy efficiency which we need to take full consideration of when we design the system.
+
+
+
+
+
+\section{Conclusion}\label{conclusion}
+In the paper, we design an optimization framework to maximize the energy efficiency while fully consider quality of service (QoS) constraints, such as the delay constraint, the throughput constraint, the packet loss rate constraint, in WBAN. We first propose the Transmission Rate Allocation Policy(TRAP) to allocate the transmission rates of each nodes for normal packets and emergency packets,respectively, to try best to satisfy the PLR constraints with the minimum cost. Given the transmission rates using the Transmission Rate Allocation Policy, we then formulate and solve the QoS optimization problem, in which we jointly optimize the transmission power and the scheduled slots at each node to provide QoS guarantee. The simulation results demonstrate that the Transmission Rate Allocation Policy can guarantee more stricter PLR constraint, and the optimal resource allocations improve the system energy efficiency with satisfying QoS constraints.
+
+
+
+
+% conference papers do not normally have an appendix
+
+
+% use section* for acknowledgement
+\section*{Acknowledgment}
+
+
+The authors would like to thank...
+
+
+\begin{appendices}
+\section{Proof: }
+sss
+\section{mmm}
+dddd
+\end{appendices}
+
+
+
+%% myReference
+\bibliographystyle{IEEEtran}
+%\bibliography{IEEEexample:article_typical}
+\bibliography{IEEEabrv,myReference}
+
+
+
+
+% that's all folks
+\end{document}
+
+
