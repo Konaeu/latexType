@@ -8,7 +8,7 @@
   organization={IEEE}
 }
 @article{myReference:WBAN:App2,
-  title={Guest editorial introduction to the special section: 4G health¡ªthe long-term evolution of m-health},
+  title={Guest editorial introduction to the special section: 4G healthâ€”the long-term evolution of m-health},
   author={Istepanaian, Robert SH and Zhang, Yuan-Tao},
   journal={Information Technology in Biomedicine, IEEE Transactions on},
   volume={16},
@@ -259,7 +259,7 @@
 
 @article{myReference:Channel:Statistical,
   title={A statistical model for on-body dynamic channels},
-  author={D¡¯Errico, Raffaele and Ouvry, Laurent},
+  author={Dâ€™Errico, Raffaele and Ouvry, Laurent},
   journal={International journal of wireless information networks},
   volume={17},
   number={3-4},
@@ -345,7 +345,7 @@
 }
 
 @article{myReference:Posture:PostureAndMovement,
-  title={Validity of using tri-axial accelerometers to measure human movement¡ªPart I: Posture and movement detection},
+  title={Validity of using tri-axial accelerometers to measure human movementâ€”Part I: Posture and movement detection},
   author={Lugade, Vipul and Fortune, Emma and Morrow, Melissa and Kaufman, Kenton},
   journal={Medical engineering \& physics},
   volume={36},
