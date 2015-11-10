@@ -137,7 +137,6 @@ IEEE 802.15.6 standards are specifically designed for wireless body area network
 \label{TDMA}
 \end{figure}
  
-
 \subsection{Energy Model}
 In WBANs, energy consumption of a body sensor mainly consists of two parts: circuitry energy consumption ${E_{elec}}$ and transmit amplifier energy consumption ${E_{tx}}$, while energy consumption of processing and listening can be negligible \cite{myReference:Energy:Human, myReference:TPC:Healthcare}. And we further assume that total transceiver energy consumption $E_{con}$ is proportional to transmit amplifier energy consumption ${E_{tx}}$ \cite{myReference:Energy:Energymode}. Therefore, the formula of the energy model is shown as follows,
 
@@ -155,75 +154,49 @@ PL\left( d_{i} \right) ={PL_{i,d_0,dB}} + 10n{\log _{10}}\left( {\frac{d_{i}}{{{
 where $d_{i}$ is the distance between sensor $i$ and the hub. ${PL_{i,d_0,dB}}$ is the path loss at a reference distance ${d_0}$ at sensor $i$, and $n$ is the path-loss exponent which is different between with Line-Of-Sight(LOS) channel and Not-Line-Of-Sight(NLOS) channel. The shadowing ${X_\sigma }$ in $dB$ follows a normal distribution $N\left( {0,\sigma^2 } \right)$. When the body postures changes, such as from still to run, the average and the standard deviation of shadowing ${X_\sigma }$ will be varies correspondingly with the changing factors of the link\cite{myReference:Channel:Statistical}. Therefore, body postures, which have the great impact on the characterization of the wireless channel, need be carefully taken into account when we design the resource optimization problem. As for the posture detection, many methods were proposed to classify the posture in real time with the physiological signals and quit a few extra motion sensors by the resource-rich Hub\cite{myReference:Posture:Real-time,myReference:Posture:PostureAndMovement}.Therefore, in this paper, we assume the posture can be detected in real time by the resource-rich hub while the posture changes.
 
 \subsection{Queuing Model}
-Each wireless sensor node can collect the physiological signals and packetize them in packets. Obviously one of the main distinguishing characteristics of WBANs is that WBANs may contain critical physiological signals, which would be picked out and treated with stricter QoS requirements. Therefore, each sensor node has a packet classifier module which can classify the packets into one of the two classes: normal packets and emergency packets, based on the preset thresholds at each sensor\cite{myReference:MAC:TrafficAdaptive}. Correspondingly, these normal packets and emergency packets are put into the normal queue and the emergency queue. Here, normal packets are generated on periodic basis, while emergency packets are totally non-periodic. Packets in different queues are treated respectively with different QoS requirements. For example, the delay of the emergency packets is shorter than the delay of the normal packets\cite{myReference:Channel:BAN}.
+Each wireless sensor node can collect the physiological signals and packetize them in packets. Obviously one of the main distinguishing characteristics of WBANs is that WBANs may contain critical physiological signals, which would be picked out and treated with stricter QoS requirements. Therefore, each sensor node has a packet classifier module which can classify the packets into one of the two classes: normal packets and emergency packets, based on the preset thresholds at each sensor\cite{myReference:MAC:TrafficAdaptive}. Correspondingly, these normal packets and emergency packets are put into the normal queue and the emergency queue. Here, normal packets are generated on periodic basis, while emergency packets are totally non-periodic. Packets in different queues are treated respectively with different QoS requirements. For example, the delay of the emergency packets is shorter than the delay of the normal packets.
 
-For normal packets, we assume the periodic arrivals of the normal packets ${A_{i,n}}$  at node i are a constant during a superframe. Thus the probability density function of ${A_{i,n}}$ can be formulated as 
-
-\begin{equation}
-Pr \left( {{A_{i,n}} = c} \right) =
-\begin{cases}
-1 & c = {\lambda _{i,n}}\\
-0 & \text{else}
-\end{cases}
-\end{equation}\\
-where $\lambda _{i,n} = \frac{{{S_{i,n}}   T}}{{{L_{i,n}}}}$ is the average arrivals of the normal packets, ${S_{i,n}}$ is the average source rate of normal packets at node $i$, $T$ is the length of the superframe in seconds, and $L _{i,n}$ is the length of the normal packet in bits at node $i$.
-
-%The arrivals of normal packets is a constant. Meanwhile the service rate $\mu$ follows a Binomial Distribution in consideration of the existence of the packet loss.
-The normal packet transmission process can then be modeled as a $D/G/1$  queuing model, and the service rate $\mu$ follows a Binomial Distribution in consideration of the existence of the packet loss. The upper boundary of average queue delay ${W_{q,i,n}}$ of the $D/G/1$ queuing model can be expressed as follows \cite{myReference:Book:Queuing},
+For normal packets, we assume the periodic arrivals of the normal packets at node $i$ are a constant ${\lambda _{i,n}}$ during a superframe. And the normal packet transmission process can be modeled as a $D/G/1$  queuing model, and the service rate $\mu_{i,n}$ follows a Binomial Distribution in consideration of the existence of the packet loss. The upper boundary of average queue delay ${W_{q,i,n}}$ of the $D/G/1$ queuing model can be expressed as follows
 
 \begin{equation}
 W_{q,i,n} \le \dfrac{\lambda_{i,n} {\sigma _{i,n,B}^2}}{2\left({1 - \rho_{i,n} }\right)}T
 \end{equation}\\
-where $\rho_{i,n} = \frac{\lambda_{i,n} }{\mu_{i,n}}$, $\mu_{i,n}  = \frac{{\left({1 - PLR_{i,n}} \right)R_{i,n}t_{i,n}}}{L_{i,n}}$, and $\sigma _{i,n,B}^2 = \frac{{PLR_{i,n} \left( {1-PLR_{i,n}}\right)R_{i,n}t_{i,n}}}{L_{i,n}}$. Here $R_{i,n}$ is the data rate of transmitting the packet to the hub for normal packets at sensor $i$, $t_{i,n}$ is the length of scheduled time at sensor $i$ for normal packets, and $PLR_{i,n}$ is the packet loss rate of normal packets at sensor $i$.
+where $\rho_{i,n} = \frac{\lambda_{i,n} }{\mu_{i,n}}$, $\mu_{i,n}  = \frac{{\left({1 - PLR_{i,n}} \right)R_{i,n}t_{i,n}}}{L_{i,n}}$, and $\sigma _{i,n,B}^2 = \frac{{PLR_{i,n} \left( {1-PLR_{i,n}}\right)R_{i,n}t_{i,n}}}{L_{i,n}}$. Here $R_{i,n}$ is the data rate of transmitting the packet to the hub for normal packets at sensor $i$, $t_{i,n}$ is the length of scheduled time at sensor $i$ for normal packets, and $PLR_{i,n}$ is the packet loss rate of normal packets at sensor $i$. $L _{i,n}$ is the length of the normal packet in bits at node $i$.
 
-For emergency packets, we assume the arrivals of the emergency packets $A_{i,m}$ at node $i$ follow a Poisson process with an average rate $\lambda _{i,m}$ during a superframe. And the service rate $\mu_{i,m}$ follows a Binomial Distribution due to the packet loss at sensor $i$. Thus we can model the emergency packet transmission process as a $M/G/1$ queuing model. The probability density function of $A_{i,m}$ can be formulated as follows,
-
-\begin{equation}
-Pr \left( {{A_{i,m}} = c} \right) =
-\begin{cases}
-{\frac{{{{\left( {{\lambda _{i,m}}} \right)}^c}{e^{ - {\lambda _{i,m}}}}}}{{c!}}} & c \ge 0 \\
-0 & c < 0
-\end{cases}
-\end{equation}\\
-where $\lambda _{i,m} = \frac{{{S_{i,m,ave}}T}}{{{L_{i,m}}}}$ is the arrival rate of the emergency packets at node $i$, ${S_{i,m,ave}}$ is the average source rate of the emergency packets at node $i$, and $L_{i,m}$ is the length of the emergency packet in bits at node $i$.
-
-The average queuing delay of the emergency packet is given by \cite{myReference:Book:Queuing}:
+For emergency packets, we assume the arrivals of the emergency packets at node $i$ follow a Poisson process with an average rate $\lambda _{i,m}$ during a superframe. And the service rate $\mu_{i,m}$ follows a Binomial Distribution due to the packet loss at sensor $i$. Thus we can model the emergency packet transmission process as a $M/G/1$ queuing model. The average queuing delay of the emergency packet is given by \cite{myReference:Book:Queuing}:
 
 \begin{equation}
 W_{q,i,m} = \dfrac{{{{\rho_{i,m} ^2}} \mathord{\left/
  {\vphantom {{{\rho_{i,m} ^2}} {\lambda_{i,m}  + \lambda_{i,m} \sigma _{i,m,B}^2}}} \right.
  \kern-\nulldelimiterspace} {\lambda_{i,m}  + \lambda_{i,m} \sigma _{i,m,B}^2}}}{2(1 -\rho_{i,m} )}  T
 \end{equation}\\
-where $\mu_{i,m}  =  \frac{{\left({1 - PLR_{i,m}}\right)   R_{i,m}   t_{i,m}}}{L_{i,m}}$, $\rho_{i,m}    = \frac{\lambda_{i,m} }{\mu_{i,m} }$, and $\sigma _{i,m,B}^2 = \frac{{PLR_{i,m} \left( {1 - PLR_{i,m}} \right)R_{i,m} t_{i,m}}}{L_{i,m}}$. Here $R_{i,m}$ is the data rate of transmitting the packet to the hub for emergency packets at sensor $i$, $t_{i,m}$ is the length of scheduled time at sensor $i$ for emergency packets, and $PLR_{i,m}$ is the packet loss rate of emergency packets at sensor $i$.
+where $\mu_{i,m}  =  \frac{{\left({1 - PLR_{i,m}}\right)   R_{i,m}   t_{i,m}}}{L_{i,m}}$, $\rho_{i,m}  = \frac{\lambda_{i,m} }{\mu_{i,m} }$, and $\sigma _{i,m,B}^2 = \frac{{PLR_{i,m} \left( {1 - PLR_{i,m}} \right)R_{i,m} t_{i,m}}}{L_{i,m}}$. Here $R_{i,m}$ is the data rate of transmitting the packet to the hub for emergency packets at sensor $i$, $t_{i,m}$ is the length of scheduled time at sensor $i$ for emergency packets, and $PLR_{i,m}$ is the packet loss rate of emergency packets at sensor $i$. $L_{i,m}$ is the length of the emergency packet in bits at sensor $i$.
+
+%The probability density function of $A_{i,m}$ can be formulated as follows,
+%\begin{equation}
+%Pr \left( {{A_{i,m}} = c} \right) =
+%\begin{cases}
+%{\frac{{{{\left( {{\lambda _{i,m}}} \right)}^c}{e^{ - {\lambda _{i,m}}}}}}{{c!}}} & c \ge 0 \\
+%0 & c < 0
+%\end{cases}
+%\end{equation}\\
+%where $\lambda _{i,m} = \frac{{{S_{i,m,ave}}T}}{{{L_{i,m}}}}$ is the arrival rate of the emergency packets at node $i$, ${S_{i,m,ave}}$ is the average source rate of the emergency packets at node $i$, and $L_{i,m}$ is the length of the emergency packet in bits at node $i$.
 
 
 \section{QoS Constraints} \label{QoSConstraint}
-We consider three QoS metrics, the packet loss rate (PLR), the throughput and the delay, of the normal and emergency packets respectively.
+We consider three QoS metrics, the packet loss rate (PLR) and the delay, of the normal and emergency packets respectively.
 \subsection{Packet Loss Rate Constraint}
-In the ISM band, the vital data firstly need to be coded using BCH codes, then the coded data go through the Differential Phase Shift Keying (DPSK) modulator to be further transmitted to the hub \cite{myReference:WBAN:Standard}. The bit Signal to Noise Ratio (bit SNR) can be expressed as
+%In the ISM band, the vital data firstly need to be coded using BCH codes, then the coded data go through the Differential Phase Shift Keying (DPSK) modulator to be further transmitted to the hub \cite{myReference:WBAN:Standard}. The bit Signal to Noise Ratio (bit SNR) can be expressed as
 
-\begin{equation}
-{\gamma } =  {10^{\frac{{{P_{tx,dB}} - PL\left( d \right) - {P_{N}}}}{{10}}}}   \frac{B}{R}
-\end{equation}\\
-where ${P_{tx,dB}}$ indicates the transmission power in $ dB$, ${P_{N}}$ is the power of noise in $ dB$, $B$ is the system bandwidth, $R$ is the transmission rate. The bit error rate performance using the DPSK modulation is given by \cite{myReference:Book:Wireless}
-
-\begin{equation}
-{P_{b,D}}({\gamma }) = \frac{1}{2}\exp{( - {\gamma })}
-\end{equation}
-
-Furthermore, the bit error rate performance can be improved by the BCH code,which can be expressed as \cite{myReference:Book:Wireless}
-
-\begin{equation}
-{P_{b,B}}({\gamma }) \approx {P_{b,D}}({\gamma })-{P_{b,D}}({\gamma }){(1-{P_{b,D}}({\gamma }))^{n - 1}}
-\end{equation}\\
-where $n$ is the length of the BCH code. We assume the bit errors occur independently in a packet. Therefore, PLR can be given by
+In the ISM band, the raw data firstly need to be coded using channel coding, e.g. BCH code, which can improve the performance of the fading channel. Then the coded data go through the modulator to be further transmitted to the hub \cite{myReference:WBAN:Standard}. Therefore, with the assumption of the bit errors occur independently in a packet, the packet loss rate $PLR$ can be expressed as follows, 
 
 \begin{equation}\label{PLR}
-PLR({\gamma }) = 1 - {\left( {1 - {P_{b,B}}({\gamma })} \right)^L}
+PLR({\gamma }) = 1 - {\left( {1 - {P_{b,C}}({\gamma })} \right)^L}
 \end{equation}\\
-where $L$ is the length of the packet in bits.
+where ${\gamma } =  {10^{\frac{{{P_{tx,dB}} - PL\left( d \right) - {P_{N}}}}{{10}}}}   \frac{B}{R}
+$ is the bit Signal to Noise Ratio(bit SNR). ${P_{tx,dB}}$ indicates the transmission power in $ dB$, ${P_{N}}$ is the power of noise in $ dB$, $B$ is the system bandwidth, $R$ is the transmission rate.  $P_{b,C}$ is the bit error rate performance error using channel coding and is a monotonous decreasing function of bit SNR $\gamma$. $L$ is the length of the packet in bits. 
 
-Due to the time-varying channel, the path loss in the current superframe cannot be known in advance. Especially, when body postures change, the path loss cannot even be estimated appropriately based on the history of the link. However, the standard deviation of shadowing can be obtained through experiments \cite{myReference:Channel:Statistical}, and the average of SNR can also be adjusted by adjusting the transmission power. Therefore, we calculate average PLR for different postures as follows:
+Due to the time-varying channel, the path loss in the current superframe cannot be known in advance. Especially, when body postures change, the path loss cannot even be estimated appropriately based on the history of the link. However, the standard deviation of shadowing can be obtained through experiments \cite{myReference:Channel:Statistical}, and the average of SNR can also be adjusted by adjusting the transmission power. Therefore, we calculate average PLR for different postures as follows,
 \begin{equation}\label{eqPLR}
 %\begin{split}
 \overline{PLR}  = \int\limits_0^{ + \infty } {PLR({\gamma})} P({\gamma}|{\mu _{{\gamma _{dB}}}},{\sigma _{{\gamma _{dB}}}})d{\gamma } \le PL{R_{th}}
@@ -238,72 +211,77 @@ P({\gamma }) = \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{\gam
 where ${\mu _{{\gamma _{dB}}}}$ denotes the average of ${\gamma }$ in $dB$. ${\sigma _{{\gamma _{dB}}}}$ is the standard deviation of the ${\gamma }$ in $dB$. When the posture changes, the standard deviation ${\sigma _{{\gamma _{dB}}}}$ of shadowing will change \cite{myReference:Channel:Statistical}.
 % In addition, the average PLR decreases with the increase of ${\mu _{{\gamma _{dB}}}}$. So the threshold $\mu _{th}$ of ${\mu _{{\gamma _{dB}}}}$ is obtained with which the average PLR just meets the PLR constraint \eqref{eqPLR}, while ${\sigma _{{\gamma _{dB}}}}$ is decided in line with the current posture.
 
-Since the average PLR is a monotonically decreasing function of ${\mu _{{\gamma _{dB}}}}$ and the proof details is given in Appendix, the average packet loss rate constraint \eqref{eqPLR} can be transformed into the ${\mu _{{\gamma _{dB}}}}$ constraint expressed as 
+%Since the average PLR is a monotonically decreasing function of ${\mu _{{\gamma _{dB}}}}$ and the proof details is given in Appendix, the average packet loss rate constraint \eqref{eqPLR} can be transformed into the ${\mu _{{\gamma _{dB}}}}$ constraint expressed as 
+%
+%\begin{equation}
+%\begin{split}
+%{\mu _{{\gamma _{dB}}}} & = E\left[ {10{{\log }_{10}}\left( {\frac{B}{R}} \right) + {P_{tx,dB}} - {PL\left( d \right)}- {P_{N}}} \right]\\
+%& = 10{\log _{10}}\left[ {{P_{tx}}   \frac{B}{R}} \right] -PL_{Fr}\left( {d}\right) - {P_{N}}\\
+%& \ge \mu _{th}
+%\end{split}
+%\end{equation}
+%and we finally have 
+%
+%%Finally, the packet loss rate constraint \eqref{eqPLR} is transformed into the following equivalent form:
+%\begin{equation}\label{FinalEqPLR}
+%\begin{split}
+%P_{tx}{R^{{ - 1}}} & \ge {B^{ - 1}} {10^{\frac{{\mu _{th}+ PL_{Fr}\left({d}\right) + {P_{N}}}}{{10}}}} = {\theta _{th}}
+%\end{split}
+%\end{equation}
 
-\begin{equation}
-\begin{split}
-{\mu _{{\gamma _{dB}}}} & = E\left[ {10{{\log }_{10}}\left( {\frac{B}{R}} \right) + {P_{tx,dB}} - {PL\left( d \right)}- {P_{N}}} \right]\\
-& = 10{\log _{10}}\left[ {{P_{tx}}   \frac{B}{R}} \right] -PL_{Fr}\left( {d}\right) - {P_{N}}\\
-& \ge \mu _{th}
-\end{split}
-\end{equation}
-and we finally have 
-
-%Finally, the packet loss rate constraint \eqref{eqPLR} is transformed into the following equivalent form:
-\begin{equation}\label{FinalEqPLR}
-\begin{split}
-P_{tx}{R^{{ - 1}}} & \ge {B^{ - 1}} {10^{\frac{{\mu _{th}+ PL_{Fr}\left({d}\right) + {P_{N}}}}{{10}}}} = {\theta _{th}}
-\end{split}
-\end{equation}
-
-\subsection{Throughput Constraint}
-For both normal packtes and emergency packets, the queuing system needs to satisfy the throughput condition, i.e., $\mu  \ge \lambda $, in order to be stable \cite{myReference:Book:Queuing}. 
-
-For normal packets, the throughput constraint $\mu _{i,n} \ge \lambda _{i,n}$ at sensor $i$ can be expressed as
-
-\begin{equation}\label{throughputNor}
-\begin{split}
-\frac{{\left( {1 - PL{R_{i,n,th}}} \right)   R_{i,n}   t_{i,n}}}{{{L_{i,n}}}}
-& \ge \frac{{{S_{i,n}}   T}}{{{L_{i,n}}}}
-\end{split}
-\end{equation}
-
-For emergency packets, the throughput constraint $\mu _{i,m} \ge \lambda _{i,m}$ is formulated as 
-\begin{equation}\label{throughputEmer}
-\begin{split}
-\frac{{\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}   t_{i,m}}}{{{L_{i,m}}}}
-& \ge \frac{{{S_{i,m,ave}}   T}}{{{L_{i,m}}}}
-\end{split}
-\end{equation}
+%\subsection{Throughput Constraint}
+%For both normal packtes and emergency packets, the queuing system needs to satisfy the throughput condition, i.e., $\mu  \ge \lambda $, in order to be stable \cite{myReference:Book:Queuing}. For normal packets, the throughput constraint $\mu _{i,n} \ge \lambda _{i,n}$ at sensor $i$ can be expressed as,
+%
+%\begin{equation}\label{throughputNor}
+%\begin{split}
+%\frac{{\left( {1 - PL{R_{i,n,th}}} \right)   R_{i,n}   t_{i,n}}}{{{L_{i,n}}}}
+%& \ge \frac{{{S_{i,n}}   T}}{{{L_{i,n}}}}
+%\end{split}
+%\end{equation}
+%
+%For emergency packets, the throughput constraint $\mu _{i,m} \ge \lambda _{i,m}$ is formulated as 
+%\begin{equation}\label{throughputEmer}
+%\begin{split}
+%\frac{{\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}   t_{i,m}}}{{{L_{i,m}}}}
+%& \ge \frac{{{S_{i,m,ave}}   T}}{{{L_{i,m}}}}
+%\end{split}
+%\end{equation}
 
 \subsection{Delay Constraint}
-The total delay that a packet suffers contains three parts: access delay ${W_a}$, propagation delay ${W_p}$ and queuing delay ${W_q}$ \cite{myReference:Queue:Delay},
+The total delay that a packet suffers contains three parts: access delay ${W_a}$, propagation delay ${W_p}$ and queuing delay ${W_q}$, where access delay ${W_a}$ is the time between the packet arrival and the beginning of the scheduled slots in the next superframe, propagation delay ${W_p}$ is the time from the begin transmission to the end of a packet, and queuing delay ${W_q}$ is the average time that the packet waits in the queue until it is successfully transmitted, shown in Queuing Model. The average access delay is half of the superframe time $T/2$ when we assume the packets arrive uniformly during each superframe time. Propagation delay is related to the service rate in the queuing system, which can be expressed as ${W_p = t/\mu}$. Therefore, the delay constraint can be formulated as,
 
 \begin{equation}
-W = {W_a}{\text{ + }}{W_q}{\text{ + }}{W_p}
+W = {W_a}{\text{ + }}{W_q}{\text{ + }}{W_p}  \le {D_{th}}
 \end{equation}\\
-where access delay ${W_a}$ is the time between the packet arrival and the beginning of the scheduled slots in the next superframe, propagation delay ${W_p}$ is the time from the begin transmission to the end of a packet, and queuing delay ${W_q}$ is the average time that the packet waits in the queue until it is successfully transmitted. The average access delay is half of the superframe time $\frac{T}{2}$ when we assume the packets arrive uniformly during each superframe time. Propagation delay is related to the service rate in the queuing system. Finally, for normal packets, the delay constraint can be expressed as follows,
 
-\begin{equation}\label{delayNor}
-\begin{split}
-  W_{i,n}  &= W_{a,i,n} + W_{q,i,n} + W_{p,i,n}\\
-  & \le \frac{T}{2}   + \frac{{\lambda _{_{i,n}}   \sigma _{i,n,B}^2}}{{2\left( {1 - \rho _{i,n}} \right)}}   T+ \frac{t_{i,n}}{{\mu _{i,n}}}\\
-  & \le {D_{i,n,th}}
-\end{split}
-\end{equation}
-where $D_{i,n,th}$ is the delay threshold of normal packets at sensor $i$. For different sensors, the delay thresholds may be different which are based on the importance of the sensors or presetted by users at the Hub.
+As for the delay constraint threshold ${D_{th}}$, that of emergency packets is smaller than that of normal packets for more higher priority. 
 
-For emergency packets, the delay constraint can be written as
-\begin{equation}\label{delayEmer}
-\begin{split}
-  W_{i,m}  &= W_{a,i,m} + W_{q,i,m} + W_{p,i,m}\\
-  & = \frac{T}{2} + \frac{{{{\rho {_{i,m}^2}} \mathord{\left/
- {\vphantom {{\rho {{_{i,m}}^2}} {\lambda _{_{i,m}} + \lambda _{_{i,m}}   \sigma _{i,m,B}^2}}} \right.
- \kern-\nulldelimiterspace} {\lambda _{_{i,m}} + \lambda _{_{i,m}}   \sigma _{i,m,B}^2}}}}{{2\left( {1 - \rho _{i,m}} \right)}}   T +\frac{t_{i,m}}{{\mu _{i,m}}}\\
- & \le {D_{i,m,th}}
-\end{split}
-\end{equation}
-where $D_{i,m,th}$ is the delay threshold of emergency packets at sensor $i$. For different sensors, the delay thresholds may be different which are based on the importance of the sensors or presetted by users at the Hub. In general, the delay requirement of emergency packets is stricter than normal packets.
+ 
+%\begin{equation}
+%W = {W_a}{\text{ + }}{W_q}{\text{ + }}{W_p}
+%\end{equation}\\
+%Finally, for normal packets, the delay constraint can be expressed as follows,
+%
+%\begin{equation}\label{delayNor}
+%\begin{split}
+  %W_{i,n}  &= W_{a,i,n} + W_{q,i,n} + W_{p,i,n}\\
+  %& \le \frac{T}{2}   + \frac{{\lambda _{_{i,n}}   \sigma _{i,n,B}^2}}{{2\left( {1 - \rho _{i,n}} \right)}}   T+ \frac{t_{i,n}}{{\mu _{i,n}}}\\
+  %& \le {D_{i,n,th}}
+%\end{split}
+%\end{equation}
+%where $D_{i,n,th}$ is the delay threshold of normal packets at sensor $i$. For different sensors, the delay thresholds may be different which are based on the importance of the sensors or presetted by users at the Hub.
+%
+%For emergency packets, the delay constraint can be written as
+%\begin{equation}\label{delayEmer}
+%\begin{split}
+  %W_{i,m}  &= W_{a,i,m} + W_{q,i,m} + W_{p,i,m}\\
+  %& = \frac{T}{2} + \frac{{{{\rho {_{i,m}^2}} \mathord{\left/
+ %{\vphantom {{\rho {{_{i,m}}^2}} {\lambda _{_{i,m}} + \lambda _{_{i,m}}   \sigma _{i,m,B}^2}}} \right.
+ %\kern-\nulldelimiterspace} {\lambda _{_{i,m}} + \lambda _{_{i,m}}   \sigma _{i,m,B}^2}}}}{{2\left( {1 - \rho _{i,m}} \right)}}   T +\frac{t_{i,m}}{{\mu _{i,m}}}\\
+ %& \le {D_{i,m,th}}
+%\end{split}
+%\end{equation}
+%where $D_{i,m,th}$ is the delay threshold of emergency packets at sensor $i$. For different sensors, the delay thresholds may be different which are based on the importance of the sensors or presetted by users at the Hub. In general, the delay requirement of emergency packets is stricter than normal packets.
 
 
 \section{Dynamic resource allocation}\label{dynamicResourceAllocation}
