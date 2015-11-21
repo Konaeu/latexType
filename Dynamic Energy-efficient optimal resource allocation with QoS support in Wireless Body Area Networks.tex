@@ -37,7 +37,8 @@
 \renewcommand{\algorithmicensure}{\textbf{Itertion:}}
 \renewcommand{\algorithmicreturn}{\textbf{Return:}}
 
-
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}{Proposition}[section]
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
@@ -127,7 +128,7 @@ To our best knowledge, we are the first to provide an unified framework to minim
 \label{WBAN}
 \end{figure}
 \subsection{Network Setting}
-IEEE 802.15.6 standards are specifically designed for wireless body area networks \cite{myReference:WBAN:Standard}. A typical WBAN model as shown in Fig.~\ref{WBAN}, which contains one hub and body sensor nodes deployed on the different positions of human body. The set of body sensors is defined as $\mathcal{N}$. And these sensors collect physiological signals and transmit them to the hub for further processing. At the network layer, one hop star topology is adopted with considering that resources of body sensor are extremely limited and additional relay nodes can bring uncomfortable user experience, while star and tree topologies are both recommended in IEEE 802.15.6 standards. At the data-link layer, collision-free and TDMA-based scheduled access mechanism in beacon mode with superframe boundaries is adopted. As presented in Fig.~\ref{TDMA}, the hub broadcasts beacons to define the superframe boundaries and allocates the slots to all the sensors, and the sensor node turns active in its dedicated slots to transmit data, which greatly reduce the energy consumption. In addition, dedicated slot allocation naturally avoid collisions, idle listening, and overhearing of sensor nodes. At the physical layer, the Industrial, Scientific, and Medical (ISM) band is adopted, which can support high-data-rate applications. Differential Phase Shift Keying (DPSK) modulation is used in ISM band \cite{myReference:WBAN:Standard}. And several level information data rates $Rate = \{ Rat{e_1},\cdots,Rat{e_h}\}$ are optional through configuring the parameters related to the Bose-Chaudhuri-Hocquenghem(BCH) code rate and modulation order.
+A typical WBAN model as shown in Fig.~\ref{WBAN}, which contains one hub and body sensor nodes deployed on the different positions of human body. The set of body sensors is defined as $\mathcal{N}$. And these sensors collect physiological signals and transmit them to the hub for further processing. At the network layer, one hop star topology is adopted with considering that resources of body sensor are extremely limited and additional relay nodes can bring uncomfortable user experience, while star and tree topologies are both recommended in IEEE 802.15.6 standards \cite{myReference:WBAN:Standard}. At the data-link layer, collision-free and TDMA-based scheduled access mechanism in beacon mode with superframe boundaries is adopted. As presented in Fig.~\ref{TDMA}, the hub broadcasts beacons to define the superframe boundaries and allocates the slots to all the sensors, and the sensor node turns active in its dedicated slots to transmit data, which greatly reduce the energy consumption. In addition, dedicated slot allocation naturally avoid collisions, idle listening, and overhearing of sensor nodes. At the physical layer, the Industrial, Scientific, and Medical (ISM) band is adopted, which can support high-data-rate applications. Differential Phase Shift Keying (DPSK) modulation is used in ISM band \cite{myReference:WBAN:Standard}. And several level information data rates $\Re = \{ Rat{e_1},\cdots,Rat{e_h}\}$ are optional through configuring the parameters related to the Bose-Chaudhuri-Hocquenghem(BCH) code rate and modulation order.
 
 
 \begin{figure}[!t]
@@ -196,7 +197,7 @@ PLR({\gamma }) = 1 - {\left( {1 - {P_{b,C}}({\gamma })} \right)^L}
 where ${\gamma } =  {10^{\frac{{{P_{tx,dB}} - PL\left( d \right) - {P_{N}}}}{{10}}}}   \frac{B}{R}
 $ is the bit Signal to Noise Ratio(bit SNR). ${P_{tx,dB}}$ indicates the transmission power in $ dB$, ${P_{N}}$ is the power of noise in $ dB$, $B$ is the system bandwidth, $R$ is the transmission rate.  $P_{b,C}$ is the bit error rate performance error using channel coding and is a monotonous decreasing function of bit SNR $\gamma$. $L$ is the length of the packet in bits. 
 
-Due to the time-varying channel, the path loss in the current superframe cannot be known in advance. Especially, when body postures change, the path loss cannot even be estimated appropriately based on the history of the link. However, the standard deviation of shadowing can be obtained through experiments \cite{myReference:Channel:Statistical}, and the average of SNR can also be adjusted by adjusting the transmission power. Therefore, we calculate average PLR for different postures as follows,
+Due to the time-varying channel, the path loss in the current superframe cannot be known in advance. Especially, when body postures change, the path loss cannot even be estimated appropriately based on the history of the link. However, the standard deviation of shadowing can be obtained through experiments \cite{myReference:Channel:Statistical}, and the average of SNR can also be adjusted by adjusting the transmission power. Then we calculate average PLR for different postures as follows,
 \begin{equation}\label{eqPLR}
 %\begin{split}
 \overline{PLR}  = \int\limits_0^{ + \infty } {PLR({\gamma})} P({\gamma}|{\mu _{{\gamma _{dB}}}},{\sigma _{{\gamma _{dB}}}})d{\gamma } \le PL{R_{th}}
@@ -256,37 +257,141 @@ W = {W_a}{\text{ + }}{W_q}{\text{ + }}{W_p}  \le {D_{th}}
 
 As for the delay constraint threshold ${D_{th}}$, that of emergency packets is smaller than that of normal packets for more higher priority. 
 
- 
-%\begin{equation}
-%W = {W_a}{\text{ + }}{W_q}{\text{ + }}{W_p}
-%\end{equation}\\
-%Finally, for normal packets, the delay constraint can be expressed as follows,
-%
-%\begin{equation}\label{delayNor}
-%\begin{split}
-  %W_{i,n}  &= W_{a,i,n} + W_{q,i,n} + W_{p,i,n}\\
-  %& \le \frac{T}{2}   + \frac{{\lambda _{_{i,n}}   \sigma _{i,n,B}^2}}{{2\left( {1 - \rho _{i,n}} \right)}}   T+ \frac{t_{i,n}}{{\mu _{i,n}}}\\
-  %& \le {D_{i,n,th}}
-%\end{split}
-%\end{equation}
-%where $D_{i,n,th}$ is the delay threshold of normal packets at sensor $i$. For different sensors, the delay thresholds may be different which are based on the importance of the sensors or presetted by users at the Hub.
-%
-%For emergency packets, the delay constraint can be written as
-%\begin{equation}\label{delayEmer}
-%\begin{split}
-  %W_{i,m}  &= W_{a,i,m} + W_{q,i,m} + W_{p,i,m}\\
-  %& = \frac{T}{2} + \frac{{{{\rho {_{i,m}^2}} \mathord{\left/
- %{\vphantom {{\rho {{_{i,m}}^2}} {\lambda _{_{i,m}} + \lambda _{_{i,m}}   \sigma _{i,m,B}^2}}} \right.
- %\kern-\nulldelimiterspace} {\lambda _{_{i,m}} + \lambda _{_{i,m}}   \sigma _{i,m,B}^2}}}}{{2\left( {1 - \rho _{i,m}} \right)}}   T +\frac{t_{i,m}}{{\mu _{i,m}}}\\
- %& \le {D_{i,m,th}}
-%\end{split}
-%\end{equation}
-%where $D_{i,m,th}$ is the delay threshold of emergency packets at sensor $i$. For different sensors, the delay thresholds may be different which are based on the importance of the sensors or presetted by users at the Hub. In general, the delay requirement of emergency packets is stricter than normal packets.
+\section{QoS Optimization Problem}
+\subsection{QoS Optimization Problem Statement}
+We optimize the resource allocation in WBAN to guarantee QoS requirements, meanwhile the energy efficiency of WBAN system is fully considered. The QoS optimization problem can be stated as: to minimize sum energy consumption of all the body sensors for both normal packets and emergency packets, subject to constraints of QoS metrics, such as PLR, throughput and delay, which are given in section ~\ref{QoSConstraint}. For different postures, channel fading parameters are different, therefore, we have to resolve the QoS problem while the posture is detected and changing. Mathematically, the problem is formulated as follows,
+% GGP
+\begin{gather}\label{GGP}
+\begin{align*}
+&\min_{\left(\bm{P_{p},T_{p}}\right)} && \sum\limits_{i = 1}^N {\left( {E_{con,i,n}+ E_{con,i,m}} \right)}&\\
+&s.t &&\overline {PLR_{i,n}} \le PL{R_{i,n,th}},&\\
+&&&\overline {PLR_{i,m}}  \le PL{R_{i,m,th}},&\\
+&&&\mu _{i,n} \ge \lambda _{i,n},&\\
+&&&\mu _{i,m} \ge \lambda _{i,m},&\\
+&&&W_{i,n} \le {D_{i,n,th}},&\\
+&&&W_{i,m} \le {D_{i,m,th}},&\\
+&&&t_{i,n},t_{i,m} \ge 0,&\\
+&&&\sum\limits_{i = 1}^N {(t_{i,n}} + t_{i,m}) \le T,&\\
+&&&{P_{tx,\min}} \le P_{tx,i,n} \le {P_{tx,\max}},&\\
+&&&{P_{tx,\min}} \le P_{tx,i,m} \le {P_{tx,\max}},&
+\end{align*}
+\end{gather} \\
+where $\bm{P_{p}}$ is the vector of the transmission powers ${P_{tx,i,n}},{P_{tx,i,m}},\left(i=1,..,N\right)$ for normal packets and emergency packets of all sensor nodes at posture state $p$, where $p\in \{pos_{1},...,pos_{k}\}$. $\bm{T_{p}}$ is the vector of the allocated time ${t_{i,n}} ,{t_{i,m}},\left(i=1,..,N\right)$ for normal packets and emergency packets of all sensor nodes at posture state $p$.  $PL{R_{i,n,th}},{PL{R_{i,m,th}}}$ are the thresholds of the average PLR for normal packets and emergency packets at sensor $i$ respectively.  ${D_{i,n,th}},{D_{i,m,th}}$ are the thresholds of the delay for normal packets and emergency packets at sensor $i$ respectively. ${P_{tx,\min}},{P_{tx,\max}}$ are the minimum and maximum transmission power respectively. 
+
+In above Qos optimization problem, the objective is to minimize the sum of the energy consumption of all wireless sensor nodes for normal packets and emergency packets in a superframe. And the first and second constraints are PLR constraints for normal packets and emergency packets respectively, in the form of eq~\eqref{eqPLR}, and require that average PLR of normal and emergency packets should be less than predefined PLR thresholds. And the PLR threshold of emergency packets is generally smaller than normal packets. The third and fourth constraint are throughput constraints, which require that service rates $\mu$ should be larger than arrival rates $\lambda$ to satisfy the stable condition of the queuing system. The fifth and sixth constraints are delay constraint and require that average delay of normal and emergency packets should be smaller than the delay threshold. 
+
+\subsection{Optimal Numerical Solution}
+Above optimization problem is a nonlinear and non-convex problem, and it is difficult to be solved. Fortunately, we try best to transform the original problem to the form of Generalized Geometric Programming (GGP), which can be solved reliably and efficiently \cite{myReference:GGP:YALMIP}.
+
+\begin{thm}
+The average PLR \eqref{eqPLR} is a monotonically decreasing function of ${\mu _{{\gamma _{dB}}}}$.
+\end{thm}
+\begin{IEEEproof}
+Obviously, the packet loss rate ${PLR({\gamma })}$ is a monotonous decreasing function of bit SNR ${\gamma}$. Once the posture has been decided, the standard deviation ${\sigma _{{\gamma _{dB}}}}$ is determinate.
+
+$\overline {PLR\left( {{\mu _{{\gamma _{dB}}}},{\sigma _{{\gamma _{dB}}}}} \right)} \\		 
+     \text{     }\text{     }= {1 - }\int\limits_0^{ + \infty } {PLR({\gamma })} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{\gamma }}}\exp \left[ { - \frac{{{{(10lo{g_{10}}({\gamma }) - {\mu _{{\gamma _{dB}}}})}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]d{\gamma }\\
+		\text{     }\text{     }=  1- h\left( {{\mu _{{\gamma}}}} \right)	$
+
+The equivalent proof is to prove the $h\left( {{\mu _{{\gamma}}}} \right)$ is a monotonous increasing function of the average of bit SNR $\mu _{{\gamma}}$. Therefore, if  
+$\forall {\text{ }}{\mu _{{\gamma _{1}}}},{\mu _{{\gamma _{2}}}}$, ${\mu _{{\gamma _{1}}}} \ge {\mu _{{\gamma _{2}}}}$,
+and we set ${x_{\text{1}}} = \frac{{{\gamma }}}{{{\mu _{{\gamma _{1}}}}}},{x_{\text{2}}} = \frac{{{\gamma }}}{{{\mu _{{\gamma _{2}}}}}}$. So we need to prove that $h\left( {{\mu _{{\gamma _1}}}} \right) \ge h\left( {{\mu _{{\gamma _2}}}} \right) $ is permanent establishment:\\
+${h\left( {{\mu _{{\gamma _1}}}} \right) = \int\limits_0^{ + \infty } {PLR({\mu _{{\gamma _1}}}{x_{\text{1}}})} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{x_{\text{1}}}}}\exp \left[ { - \frac{{{{\left( {10{{\log }_{10}}{x_{\text{1}}}} \right)}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]d{x_{\text{1}}}}$
+${h\left( {{\mu _{{\gamma _2}}}} \right) = \int\limits_0^{ + \infty } {PLR({\mu _{{\gamma _2}}}{x_{\text{2}}})} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{x_{\text{2}}}}}\exp \left[ { - \frac{{{{\left( {10{{\log }_{10}}{x_{\text{2}}}} \right)}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]d{x_{\text{2}}}}$
+Then,\\
+ $h\left( {{\mu _{{\gamma _1}}}} \right) - h\left( {{\mu _{{\gamma _2}}}} \right)\\
+  = \int\limits_0^{ + \infty } {PLR_{\Delta}\left(x\right)} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}x}}\exp \left[ { - \frac{{{{\left( {10{{\log }_{10}}\left( x \right)} \right)}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]dx$\\
+where $PLR_{\Delta}\left(x\right)={PLR({\mu _{{\gamma _1}}} x) - PLR({\mu _{{\gamma _2}}} x)}$. Because the ${PLR({\gamma })}$ is a monotonous decreasing function of bit SNR ${\gamma}$, and ${\mu _{{\gamma _{1}}}x} \ge {\mu _{{\gamma _{2}}}x}$, therefore, $PLR_{\Delta}\left(x\right) \ge 0$. So we prove that $h\left( {{\mu _{{\gamma}}}} \right)$ is a monotonous increasing function of the average of bit SNR $\mu _{{\gamma}}$.
+
+\end{IEEEproof}
+
+Since the average PLR in eq~\eqref{eqPLR} decreases with the increase of ${\mu _{{\gamma _{dB}}}}$. So the threshold $\mu _{th}$ of ${\mu _{{\gamma _{dB}}}}$ is obtained with which the average PLR just meets the PLR constraint \eqref{eqPLR}, while ${\sigma _{{\gamma _{dB}}}}$ is decided in line with the current posture. Therefore the average packet loss rate constraint \eqref{eqPLR} can be transformed into the ${\mu _{{\gamma _{dB}}}}$ constraint expressed as 
+
+\begin{equation}\label{muPLR}
+\begin{split}
+{\mu _{{\gamma _{dB}}}} & = E\left[ {10{{\log }_{10}}\left( {\frac{B}{R}} \right) + {P_{tx,dB}} - {PL\left( d \right)}- {P_{N}}} \right]\\
+& = 10{\log _{10}}\left[ {{P_{tx}}   \frac{B}{R}} \right] -PL_{Fr}\left( {d}\right) - {P_{N}}\\
+& \ge \mu _{th}
+\end{split}
+\end{equation}
+where $\mu _{th}$ is the threshold of ${\mu _{{\gamma _{dB}}}}$, which just satisfy $\overline {PLR\left( {{\mu _{{th}}},{\sigma _{{\gamma _{dB}}}}} \right)}=PLR_{th}$.
+
+Therefore, the first and second PLR constraints, in form of eq~\eqref{muPLR}, can be transformed into the form of generalized posynomials. 
+
+As for third and fourth throughput constraints, they are originally in form of generalized posynomials. However, the fifth and sixth delay constraints are not in form of generalized posynomials. But both of them are in form of the following inequality, which can be successfully transformed in the form of generalized posynomials:
+
+\begin{equation}\label{noGGP}
+{\frac{{{p\left(x\right)}}}{{{r\left(x\right)-q\left(x\right)}}}}+ f\left(x\right)\le 1
+\end{equation}
+where $r\left(x\right)$ is monomial, $p\left(x\right)$,$q\left(x\right)$ and $f\left(x\right)$ are generalized posynomials. And $q\left(x\right)<r\left(x\right)$ is the implicit constraint. Then we can replace the first term by a new variable $t$, along with the constraint as ${\frac{{{p\left(x\right)}}}{{{r\left(x\right)-q\left(x\right)}}}} \le t$, which can be expressed as the generalized posynomial inequality $q\left(x\right)+\frac{p\left(x\right)}{t}\le r\left(x\right)$. Finally, we replace the inequality \eqref{noGGP} with
+
+\begin{equation}
+t+f\left(x\right) \le 1,  \text{  }q\left(x\right)+\frac{p\left(x\right)}{t}\le r\left(x\right) 
+\end{equation}
+
+Therefore, the fifth delay constraint of normal packets can be in the following equivalent form,
+
+\begin{gather}
+\begin{align*}
+&\frac{{{L_{i,n}}{\left( {R_{i,n}} \right)^{ - 1}}}}{{ \left( {1 - PL{R_{i,n,th}}} \right)}}    + tmpV_{i,n} \le \left( {{D_{i,n,th}} - \frac{T}{2}} \right), \cr &\\
+&\frac{{   \left( {PL{R_{i,n,th}} - PL{R_{i,n,th}}^2} \right)   {S_{i,n}} T {{ {R_{i,n}^{2} \cdot t_{i,n}^{2}} }}}}{{{L_{i,n}}}} \cdot {\left( {tmpV_{i,n}^{}} \right)^{ - 1}}\cr
+		& \text{  }\text{  } + \frac{2 {L_{i,n}}{S_{i,n}}T}{{\left( {1 - PL{R_{i,n,th}}} \right)}}   \le 2   {L_{i,n}}   R_{i,n}^{}   t_{i,n}^{}
+\end{align*}
+\end{gather}
+where $tmpV_{i,n}$ is a new variable. And the sixth delay constraint can be converted to the following form,
+
+\begin{gather}
+\begin{align*}
+&\frac{{{L_{i,m}}{\left( {R_{i,m}^{}} \right)^{ - 1}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)}}    + tmpV_{i,m}^{}  \le \left( {{D_{i,m,th}} - \frac{T}{2}} \right), \cr&\\
+&\frac{{{L_{i,m}} {S_{i,m,ave}} T}{R_{i,m}^{ - 1}  t_{i,m}^{ - 1} {tmpV_{i,m}^{-1}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)^{2}}} + \frac{2 {S_{i,m,ave}} T}{\left( {1 - PL{R_{i,m,th}}} \right) } \cr
+	&	\text{  }\text{  }  + \frac{{PL{R_{i,m,th}} {S_{i,m,ave}} T R_{i,m}   t_{i,m}}}{{{L_{i,m}}}}   {\left( {tmpV_{i,m}} \right)^{ - 1}} \le 2 R_{i,m} t_{i,m} , \cr&\\
+\end{align*}
+\end{gather}
+where $tmpV_{i,m}$ is a new variable, while the sixth constraint is transformed in the form of generalized posynomials.
+
+Obviously, all of the remain constraints are generalized posynomials. Therefore, the QoS optimization problem is successfully tranformed in the form of Generalized Geometric Programming (GGP) as follows\cite{myReference:GGP}.
+
+
+\begin{gather}
+\begin{align*}
+&\min &&f_{0}\left(x\right)&\\
+&s.t &&f_{i}\left(x\right)\le 1, i=1,...,m&\\
+&&&g_{i}\left(x\right)= 1, i=1,...,p&\\
+\end{align*}
+\end{gather}
+where $g_{1},...,g_{p}$ are monomials and $f_{0},...,f_{m}$ are generalized posynomials. GGPs can be mechanically converted to equivalent Geometric Programming(GP) by a parser using the transformations described in \cite{myReference:GGP}, while the GPs can be transformed into a convex optimization problem. Then, the convex optimization problem can be solved by using many solvers\cite{myReference:GGP:Convex}.
+
+Finally, the QoS constraint problem in the form of Generalized Geometric Programming (GGP) is then formulated as follows,
+
+% GGP finally
+\begin{gather}
+\begin{align*}
+&\min_{\left(\bm{P_{p},T_{p}}\right)}  \sum\limits_{i = 1}^{N = 5} {\left( \left(\alpha +1\right){   P_{tx,i,n}   t_{i,n} + \left(\alpha +1\right)  P_{tx,i,m}  t_{i,m}} \right)}&\\
+&s.t &\\
+&P_{tx,i,n}   {\left( {R_{i,n}} \right)^{ - 1}} \ge {\theta _{i,n,th}},&\\
+&P_{tx,i,m}   {\left( {R_{i,m}} \right)^{ - 1}} \ge {\theta _{i,m,th}},&\\
+&\frac{{\left( {1 - PL{R_{i,n,th}}} \right)   R_{i,n}   t_{i,n}}}{{{L_{i,n}}}} \ge \frac{{{S_{i,n}}   T}}{{{L_{i,n}}}},&\\
+&\frac{{\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}   t_{i,m}}}{{{L_{i,m}}}} \ge \frac{{{S_{i,m,ave}}   T}}{{{L_{i,m}}}},&\\
+&\frac{{{L_{i,n}}{\left( {R_{i,n}} \right)^{ - 1}}}}{{ \left( {1 - PL{R_{i,n,th}}} \right)}}    + tmpV_{i,n} \le \left( {{D_{i,n,th}} - \frac{T}{2}} \right), \cr &\\
+&\frac{{{L_{i,m}}{\left( {R_{i,m}^{}} \right)^{ - 1}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)}}    + tmpV_{i,m}^{}  \le \left( {{D_{i,m,th}} - \frac{T}{2}} \right), \cr&\\
+&\frac{{   \left( {PL{R_{i,n,th}} - PL{R_{i,n,th}}^2} \right)   {S_{i,n}} T {{ {R_{i,n}^{2} \cdot t_{i,n}^{2}} }}}}{{{L_{i,n}}}} \cdot {\left( {tmpV_{i,n}^{}} \right)^{ - 1}}\cr
+		& \text{  }\text{  } + \frac{2 {L_{i,n}}{S_{i,n}}T}{{\left( {1 - PL{R_{i,n,th}}} \right)}}   \le 2   {L_{i,n}}   R_{i,n}^{}   t_{i,n}^{}, \cr&\\
+&\frac{{{L_{i,m}} {S_{i,m,ave}} T}{R_{i,m}^{ - 1}  t_{i,m}^{ - 1} {tmpV_{i,m}^{-1}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)^{2}}} + \frac{2 {S_{i,m,ave}} T}{\left( {1 - PL{R_{i,m,th}}} \right) } \cr
+	&	\text{  }\text{  }  + \frac{{PL{R_{i,m,th}} {S_{i,m,ave}} T R_{i,m}   t_{i,m}}}{{{L_{i,m}}}}   {\left( {tmpV_{i,m}} \right)^{ - 1}} \le 2 R_{i,m} t_{i,m} , \cr&\\
+&\sum\limits_{i = 1}^N {(t_{i,n}^{}}  + t_{i,m}^{}) \le T,\text{  }t_{i,n},t_{i,m} \ge 0,&\\
+%{Rate_{1}} \le R_{i,n}^{},R_{i,m} \le {Rate_{h }},&\\
+& P_{tx,\min } \le P_{tx,i,n} \le P_{tx,\max },&\\
+& P_{tx,\min } \le P_{tx,i,m} \le P_{tx,\max },&\\
+\end{align*}
+\end{gather}
+
+Efficient solution solvers for the Generalized Geometric Programming (GGP) are well developed. We can use the YALMIP\cite{myReference:GGP:YALMIP}, a toolbox for modeling and optimization in MATLAB, to solve the transformed QoS optimization problem. Then we can get the optimal solution $\bm{P_{p}^{*},T_{p}^{*}}$ to the QoS optimization problem. In the system implementation, the resource-rich Hub performs the QoS optimization problem while the posture state $p$ changes. The parameters$\left(\beta,T,\bm{PLR_{th}},\bm{D_{th}}\right)$ are set by the administrator at the Hub, where $\bm{PLR_{th}}$ is the vector of the $PLR$ thresholds $PLR_{i,n,th},PLR_{i,m,th},\left(i=1,..,N\right)$ of normal packets and emergency packets for all sensor nodes, and $D_{th}$ are the vector of the delay thresholds $D_{i,n,th},D_{i,m,th},\left(i=1,..,N\right)$ of normal packets and emergency packets for all sensor nodes. The parameters $\left(L_{i,n},L_{i,m}\right)$ are provide by the wireless sensor node $i$. The Hub calculates the $\bm{R_{p}}$ by using TRAP, and computes the optimal transmission rates $\bm{P_{p}^{*}}$ and the optimal allocated time $\bm{T_{p}^{*}}$ by solving the QoS optimization problem. Then the Hub feeds back the parameters $\left(\bm{R_{p}},\bm{R_{p}^{*}},\bm{T_{p}^{*}}\right)$ to each wireless sensor node through broadcasting beacons at the beginning of the superframe once the posture changes.
 
 
 \section{Dynamic resource allocation}\label{dynamicResourceAllocation}
 \subsection{Transmission Rate Allocation Policy}
-As recommended by IEEE 802.15.6 standards, the optional transmission rates in the narrowband physical layer are discrete. The discrete nature of transmission rates $Rate = \{ Rat{e_1},\cdots,Rat{e_h}\}$ makes the following optimization problem difficult to be solved when the transmission rates are involved. And the transmission rate is  Thus we allocate the transmission rates based on PLR requirement and link quality first before solving the optimization problem.
+Due to the various postures or some more strict QoS requirements, even the maximum transmission power, allocated by the above QoS optimization problem, cannot satisfy the QoS requirements. Considering the fact that reducing transmission rate can gain lower PLR with same SNR, we can carefully adjust the transmission rates for each nodes to assist the QoS optimization problem in responding to stricter QoS requirements. The discrete nature of optional transmission rates $\Re = \{ Rat{e_1},\cdots,Rat{e_h}\}$ makes the adjustment of the transmission rate difficult to be turned when the total throughput is limited.  
+%Thus we allocate the transmission rates based on PLR requirement and link quality first before solving the optimization problem.
 
 %When the transmission rates are optimized in the following optimization problem, the optimization problem cannot be solved efficiently. So the transmission rates are firstly allocated based on PLR requirement and link quality.
 
@@ -364,8 +469,7 @@ ${\theta _{i,m,th}} = {B^{-1}} {10^{\frac{{\mu _{i,m,{R_{cur}}}+PL_{Fr}{\left(d_
 \end{algorithmic}
 \end{algorithm}
 	
-	
-According to the PLR requirement and link quality, the hub can get the transmission rate threshold ${R_{i,th}}$ for sensor $i$, which just satisfies the PLR constraint~\eqref{FinalEqPLR} with the maximum transmission power $P_{i,tx,max}$.
+According to the PLR requirement and link quality, the hub can get the transmission rate threshold ${R_{i,th}}$ for sensor $i$, which just satisfies the PLR constraint with the maximum transmission power $P_{i,tx,max}$.
 \begin{equation}\label{eqRth}
 {R_{i,th}} = \frac{P_{i,tx,max}}{\theta _{i,th}}
 \end{equation}
@@ -403,7 +507,12 @@ In TRAP, the parameter $\beta$ is designed to tune the desired trade-off between
 %In TRAP, a countermeasure is designed to try best to reducing the overall PLR cost. The PLR cost function is formulated as follows
 
 
-\subsection{QoS Optimization Problem}
+
+
+\section{Simulations}\label{simulation}
+\subsection{Simulation Setting}
+
+
 \begin{table}
 \caption{Parameters of each node}
 \begin{center}
@@ -442,100 +551,7 @@ Index & Still  & Walk  & Run       & ${S_{n}}\left(Kbps\right)$ &${S_{m,ave}}\le
 \end{center}
 \label{parPos}
 \end{table}
-	
-The QoS optimization problem can be stated as: to minimize sum energy consumption, subject to constraints of QoS metrics, such as  PLR, throughput and delay. The PLR constraint is given in \eqref{FinalEqPLR}. And \eqref{throughputNor} \eqref{throughputEmer} show the details of throughput constraints. For the delay constraint, \eqref{delayNor} \eqref{delayEmer} are for normal packets and emergency packets respectively. 
-Mathematically, the problem is formulated as follows,
-% GGP
-\begin{gather}\label{GGP}
-\begin{align*}
-&\min_{\left(\bm{P_{p},T_{p}}\right)} && \sum\limits_{i = 1}^N {\left( {E_{con,i,n}+ E_{con,i,m}} \right)}&\\
-&s.t &&\overline {PLR_{i,n}} \le PL{R_{i,n,th}},&\\
-&&&\overline {PLR_{i,m}}  \le PL{R_{i,m,th}},&\\
-&&&\mu _{i,n} \ge \lambda _{i,n},&\\
-&&&\mu _{i,m} \ge \lambda _{i,m},&\\
-&&&W_{i,n} \le {D_{i,n,th}},&\\
-&&&W_{i,m} \le {D_{i,m,th}},&\\
-&&&t_{i,n},t_{i,m} \ge 0,&\\
-&&&\sum\limits_{i = 1}^N {(t_{i,n}} + t_{i,m}) \le T,&\\
-&&&{P_{i,\min ,dBm}} \le P_{i,dBm} \le {P_{i,\max ,dBm}},&
-\end{align*}
-\end{gather} \\
-where ${P_{tx,i,n}},{P_{tx,i,m}}$ are the transmission powers for normal packets and emergency packets at sensor $i$ respectively. $\bm{P_{p}}$ is the vector of the transmission powers ${P_{tx,i,n}},{P_{tx,i,m}},\left(i=1,..,N\right)$ for normal packets and emergency packets of all sensor nodes at posture state $p$, where $p\in \{pos_{1},...,pos_{k}\}$. ${t_{i,n}} ,{t_{i,m}}$ are the allocated time for normal packets and emergency packets at sensor $i$ in a superframe respectively. $\bm{T_{p}}$ is the vector of the allocated time ${t_{i,n}} ,{t_{i,m}},\left(i=1,..,N\right)$ for normal packets and emergency packets of all sensor nodes at posture state $p$, where $p\in \{pos_{1},...,pos_{k}\}$.  $PL{R_{i,n,th}},{PL{R_{i,m,th}}}$ are the thresholds of the average PLR for normal packets and emergency packets at sensor $i$ respectively.  ${D_{i,n,th}},{D_{i,m,th}}$ are the thresholds of the delay for normal packets and emergency packets at sensor $i$ respectively. ${P_{i,\min,dBm}},{P_{i,\max ,dBm}}$ are the minimum and maximum transmission power in $dBm$ respectively. 
 
-Since the above optimization problem is a nonlinear and non-convex problem, it is difficult to be solved. Fortunately, the original problem can be successfully transformed in the form of Generalized Geometric Programming (GGP) based on advanced techniques in \cite{myReference:GGP}. Additionally, the GGP problem can be solved reliably and efficiently \cite{myReference:GGP:YALMIP}.
-
-In above Qos optimization problem, the objective is to minimize the sum of the energy consumption of all wireless sensor nodes for normal packets and emergency packets in a superframe. And the first and second constraints are PLR constraints for normal packets and emergency packets respectively, which can finally be in the form of \eqref{FinalEqPLR} and are generalized posynomials. The third and fourth constraint are throughput constraints and in form of generalized posynomials. The fifth and sixth delay constraints are not in form of generalized posynomials. But both of them are in form of the following inequality, which can be successfully transformed in the form of generalized posynomials\cite{myReference:GGP}:
-\begin{equation}\label{noGGP}
-{\frac{{{p\left(x\right)}}}{{{r\left(x\right)-q\left(x\right)}}}}+ f\left(x\right)\le 1
-\end{equation}
-where $r\left(x\right)$ is monomial, $p\left(x\right)$,$q\left(x\right)$ and $f\left(x\right)$ are generalized posynomials. And $q\left(x\right)<r\left(x\right)$ is the implicit constraint. Then we can replace the first term by a new variable $t$, along with the constraint as ${\frac{{{p\left(x\right)}}}{{{r\left(x\right)-q\left(x\right)}}}} \le t$, which can be expressed as the generalized posynomial inequality $q\left(x\right)+\frac{p\left(x\right)}{t}\le r\left(x\right)$. Finally, we replace the inequality \eqref{noGGP} with
-
-\begin{equation}
-t+f\left(x\right) \le 1,  \text{  }q\left(x\right)+\frac{p\left(x\right)}{t}\le r\left(x\right) 
-\end{equation}
-
-Therefore, the fifth delay constraint of normal packets can be in the following equivalent form,
-
-\begin{gather}
-\begin{align*}
-&\frac{{{L_{i,n}}{\left( {R_{i,n}} \right)^{ - 1}}}}{{ \left( {1 - PL{R_{i,n,th}}} \right)}}    + tmpV_{i,n} \le \left( {{D_{i,n,th}} - \frac{T}{2}} \right), \cr &\\
-&\frac{{   \left( {PL{R_{i,n,th}} - PL{R_{i,n,th}}^2} \right)   {S_{i,n}} T {{ {R_{i,n}^{2} \cdot t_{i,n}^{2}} }}}}{{{L_{i,n}}}} \cdot {\left( {tmpV_{i,n}^{}} \right)^{ - 1}}\cr
-		& \text{  }\text{  } + \frac{2 {L_{i,n}}{S_{i,n}}T}{{\left( {1 - PL{R_{i,n,th}}} \right)}}   \le 2   {L_{i,n}}   R_{i,n}^{}   t_{i,n}^{}
-\end{align*}
-\end{gather}
-where $tmpV_{i,n}$ is a new variable. And the sixth delay constraint can be converted to the following form,
-
-\begin{gather}
-\begin{align*}
-&\frac{{{L_{i,m}}{\left( {R_{i,m}^{}} \right)^{ - 1}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)}}    + tmpV_{i,m}^{}  \le \left( {{D_{i,m,th}} - \frac{T}{2}} \right), \cr&\\
-&\frac{{{L_{i,m}} {S_{i,m,ave}} T}{R_{i,m}^{ - 1}  t_{i,m}^{ - 1} {tmpV_{i,m}^{-1}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)^{2}}} + \frac{2 {S_{i,m,ave}} T}{\left( {1 - PL{R_{i,m,th}}} \right) } \cr
-	&	\text{  }\text{  }  + \frac{{PL{R_{i,m,th}} {S_{i,m,ave}} T R_{i,m}   t_{i,m}}}{{{L_{i,m}}}}   {\left( {tmpV_{i,m}} \right)^{ - 1}} \le 2 R_{i,m} t_{i,m} , \cr&\\
-\end{align*}
-\end{gather}
-where $tmpV_{i,m}$ is a new variable, while the sixth constraint is transformed in the form of generalized posynomials.
-
-Obviously, all of the remain constraints are generalized posynomials. Therefore, the QoS optimization problem is successfully tranformed in the form of Generalized Geometric Programming (GGP) as follows\cite{myReference:GGP}.
-
-
-\begin{gather}
-\begin{align*}
-&\min &&f_{0}\left(x\right)&\\
-&s.t &&f_{i}\left(x\right)\le 1, i=1,...,m&\\
-&&&g_{i}\left(x\right)= 1, i=1,...,p&\\
-\end{align*}
-\end{gather}
-where $g_{1},...,g_{p}$ are monomials and $f_{0},...,f_{m}$ are generalized posynomials. GGPs can be mechanically converted to equivalent Geometric Programming(GP) by a parser using the transformations described in \cite{myReference:GGP}, while the GPs can be transformed into a convex optimization problem. Then, the convex optimization problem can be solved by using many solvers\cite{myReference:GGP:Convex}.
-
-Finally, the QoS constraint problem in the form of Generalized Geometric Programming (GGP) is then formulated as follows,
-
-% GGP finally
-\begin{gather}
-\begin{align*}
-&\min_{\left(\bm{P_{p},T_{p}}\right)}  \sum\limits_{i = 1}^{N = 5} {\left( \left(\alpha +1\right){   P_{tx,i,n}   t_{i,n} + \left(\alpha +1\right)  P_{tx,i,m}  t_{i,m}} \right)}&\\
-&s.t &\\
-&P_{tx,i,n}   {\left( {R_{i,n}} \right)^{ - 1}} \ge {\theta _{i,n,th}},&\\
-&P_{tx,i,m}   {\left( {R_{i,m}} \right)^{ - 1}} \ge {\theta _{i,m,th}},&\\
-&\frac{{\left( {1 - PL{R_{i,n,th}}} \right)   R_{i,n}   t_{i,n}}}{{{L_{i,n}}}} \ge \frac{{{S_{i,n}}   T}}{{{L_{i,n}}}},&\\
-&\frac{{\left( {1 - PL{R_{i,m,th}}} \right)   R_{i,m}   t_{i,m}}}{{{L_{i,m}}}} \ge \frac{{{S_{i,m,ave}}   T}}{{{L_{i,m}}}},&\\
-&\frac{{{L_{i,n}}{\left( {R_{i,n}} \right)^{ - 1}}}}{{ \left( {1 - PL{R_{i,n,th}}} \right)}}    + tmpV_{i,n} \le \left( {{D_{i,n,th}} - \frac{T}{2}} \right), \cr &\\
-&\frac{{{L_{i,m}}{\left( {R_{i,m}^{}} \right)^{ - 1}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)}}    + tmpV_{i,m}^{}  \le \left( {{D_{i,m,th}} - \frac{T}{2}} \right), \cr&\\
-&\frac{{   \left( {PL{R_{i,n,th}} - PL{R_{i,n,th}}^2} \right)   {S_{i,n}} T {{ {R_{i,n}^{2} \cdot t_{i,n}^{2}} }}}}{{{L_{i,n}}}} \cdot {\left( {tmpV_{i,n}^{}} \right)^{ - 1}}\cr
-		& \text{  }\text{  } + \frac{2 {L_{i,n}}{S_{i,n}}T}{{\left( {1 - PL{R_{i,n,th}}} \right)}}   \le 2   {L_{i,n}}   R_{i,n}^{}   t_{i,n}^{}, \cr&\\
-&\frac{{{L_{i,m}} {S_{i,m,ave}} T}{R_{i,m}^{ - 1}  t_{i,m}^{ - 1} {tmpV_{i,m}^{-1}}}}{{\left( {1 - PL{R_{i,m,th}}} \right)^{2}}} + \frac{2 {S_{i,m,ave}} T}{\left( {1 - PL{R_{i,m,th}}} \right) } \cr
-	&	\text{  }\text{  }  + \frac{{PL{R_{i,m,th}} {S_{i,m,ave}} T R_{i,m}   t_{i,m}}}{{{L_{i,m}}}}   {\left( {tmpV_{i,m}} \right)^{ - 1}} \le 2 R_{i,m} t_{i,m} , \cr&\\
-&\sum\limits_{i = 1}^N {(t_{i,n}^{}}  + t_{i,m}^{}) \le T,\text{  }t_{i,n},t_{i,m} \ge 0,&\\
-%{Rate_{1}} \le R_{i,n}^{},R_{i,m} \le {Rate_{h }},&\\
-&{10^{\frac{{{P_{tx,\min ,dBm}}}}{{10}}}} \le P_{tx,i,n} \le {10^{\frac{{{P_{tx,\max ,dBm}}}}{{10}}}},&\\
-&{10^{\frac{{{P_{tx,\min ,dBm}}}}{{10}}}} \le P_{tx,i,m} \le {10^{\frac{{{P_{tx,\max ,dBm}}}}{{10}}}},&\\
-\end{align*}
-\end{gather}
-
-Efficient solution solvers for the Generalized Geometric Programming (GGP) are well developed. We can use the YALMIP\cite{myReference:GGP:YALMIP}, a toolbox for modeling and optimization in MATLAB, to solve the transformed QoS optimization problem. Then we can get the optimal solution $\bm{P_{p}^{*},T_{p}^{*}}$ to the QoS optimization problem. In the system implementation, the resource-rich Hub performs the QoS optimization problem while the posture state $p$ changes. The parameters$\left(\beta,T,\bm{PLR_{th}},\bm{D_{th}}\right)$ are set by the administrator at the Hub, where $\bm{PLR_{th}}$ is the vector of the $PLR$ thresholds $PLR_{i,n,th},PLR_{i,m,th},\left(i=1,..,N\right)$ of normal packets and emergency packets for all sensor nodes, and $D_{th}$ are the vector of the delay thresholds $D_{i,n,th},D_{i,m,th},\left(i=1,..,N\right)$ of normal packets and emergency packets for all sensor nodes. The parameters $\left(L_{i,n},L_{i,m}\right)$ are provide by the wireless sensor node $i$. The Hub calculates the $\bm{R_{p}}$ by using TRAP, and computes the optimal transmission rates $\bm{P_{p}^{*}}$ and the optimal allocated time $\bm{T_{p}^{*}}$ by solving the QoS optimization problem. Then the Hub feeds back the parameters $\left(\bm{R_{p}},\bm{R_{p}^{*}},\bm{T_{p}^{*}}\right)$ to each wireless sensor node through broadcasting beacons at the beginning of the superframe once the posture changes.
-
-
-
-\section{Simulations}\label{simulation}
-\subsection{Simulation Setting}
 
 Five sensors and a hub are included in a WBAN and placed on the body in accordance with Fig.~\ref{WBAN}. And the detailed information of sensors, such as the distance between the sensor and the hub, the location and so on, are given in Table \ref{parNode}. The WBAN adopts IEEE 802.15.6 protocol and operates at 2.4GHz frequency band with 1 KHz bandwidth. The channel coefficients are set based on the measurement results in \cite{myReference:Channel:Statistical,myReference:Channel:Characterization} and shown in Table \ref{parNode} and Table \ref{parPos}, respectively. The probability of different posture change can be determined form real human posture trace and the Markov chain can be used to model posture changes sequences while maintaining randomness of the posture selection\cite{myReference:Posture:MoBAN}. Here we only consider three types of body postures, i.e., still, walk and run, and their steady-state probabilities are set to 0.5, 0.3 and 0.2 respectively \cite{myReference:Posture:MoBAN} . The extension to the case with more body postures is straightforward. 
 
@@ -544,6 +560,7 @@ We assume that the path loss for each sensor remains unchanged during a superfra
 
 
 In order to evaluate the performance, we compare our approach with three other approaches. The first one is the uniform power allocation (UPA) approach, and the second one is the transmission power control (TPC) approach \cite{myReference:TPC:Healthcare}, and the third one is the Link-State-Estimation-Based Transmission Power Control\cite{myReference:TPC:LSETPC}. In UPA, each sensor has the same transmission power, and the transmission rates are all set to the maximum. In addition, the time slots for each node need to satisfy the throughput constraint. In TPC, the authors only outline the method of the power control but not give the way of the time slot allocation. Thus we also set the time slots of TPC to satisfy the throughput constraint with the maximum transmission rate. Taking into account the different requirements of PLR thresholds under different scenarios, we study the performance comparison of three approaches with the PLR threshold in the range from 0.5\% to 30\%. And the PLR threshold of emergency packets is smaller than the PLR threshold of normal packets in each experiment of the proposed approach. We set the threshold of the queuing delay for normal packets as 200$ms$ and the threshold of the queuing delay for emergency packets as 150$ms$.
+
 
 
 \subsection{Simulation Results}
@@ -614,38 +631,8 @@ In the paper, we design an optimization framework to maximize the energy efficie
 
 This work is supported by the National Natural Science Foundation of China (Grant No. 61202406) and the USTC Grand Master Professor Funds (ZC9850290097).
 
-\begin{appendices}
-
-\section{Proof:Average Packet Loss Rate is a monotonous decreasing function of the average of bit SNR}\label{AppendixA}
-\begin{IEEEproof}
-Firstly, ${PLR({\gamma })}$ is a monotonous decreasing function of bit SNR ${\gamma}$ , which can be easy to proof.
-\begin{equation*}
-PLR({\gamma }) = 1 - {\left( {1 - {P_{b,B}}({\gamma })} \right)^L}
-\end{equation*}
-When the standard deviation ${\sigma _{{\gamma _{dB}}}}$ in ${dB}$ is decided, the $\overline {PLR\left( {{\mu _{{\gamma _{dB}}}},{\sigma _{{\gamma _{dB}}}}} \right)}$  should be proven to be a monotonous decreasing function of the average of bit SNR $\mu _{{\gamma _{dB}}}$.   \\
-
-$\overline {PLR\left( {{\mu _{{\gamma _{dB}}}},{\sigma _{{\gamma _{dB}}}}} \right)} \\
-     \text{     }\text{     }= {1 - }\int\limits_0^{ + \infty } {PLR({\gamma })} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{\gamma }}}\exp \left[ { - \frac{{{{(10lo{g_{10}}({\gamma }) - {\mu _{{\gamma _{dB}}}})}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]d{\gamma }$
-The equivalent proof is to prove the $h\left( {{\mu _{{\gamma}}}} \right)$ is a monotonous increasing function of the average of bit SNR $\mu _{{\gamma}}$. \\
-%$h\left( {{\mu _{{\gamma _{dB}}}}} \right) = \int\limits_0^{ + \infty } {PLR({\gamma })} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{\gamma }}}\exp \left[ { - \frac{{{{(10lo{g_{10}}({\gamma }) - {\mu _{{\gamma _{dB}}}})}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]d{\gamma }$\\
-where $h\left( {{\mu _{{\gamma}}}} \right) = \int\limits_0^{ + \infty } {PLR({\gamma })} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{\gamma }}}\exp \left[ { - \frac{{{{(10lo{g_{10}}(\frac{\gamma }{\mu _{{\gamma}}}))}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]d{\gamma }$\\
-$\forall {\text{ }}{\mu _{{\gamma _{1}}}},{\mu _{{\gamma _{2}}}}$, ${\mu _{{\gamma _{1}}}} \ge {\mu _{{\gamma _{2}}}}$,
-and we set ${x_{\text{1}}} = \frac{{{\gamma }}}{{{\mu _{{\gamma _{1}}}}}},{x_{\text{2}}} = \frac{{{\gamma }}}{{{\mu _{{\gamma _{2}}}}}}$. So we can get:\\
-\text{     }${h\left( {{\mu _{{\gamma _1}}}} \right) = \int\limits_0^{ + \infty } {PLR({\mu _{{\gamma _1}}}{x_{\text{1}}})} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{x_{\text{1}}}}}\exp \left[ { - \frac{{{{\left( {10{{\log }_{10}}{x_{\text{1}}}} \right)}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]d{x_{\text{1}}}}$
-\text{     }${h\left( {{\mu _{{\gamma _2}}}} \right) = \int\limits_0^{ + \infty } {PLR({\mu _{{\gamma _2}}}{x_{\text{2}}})} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}{x_{\text{2}}}}}\exp \left[ { - \frac{{{{\left( {10{{\log }_{10}}{x_{\text{2}}}} \right)}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]d{x_{\text{2}}}}$
-Then,\\
- $h\left( {{\mu _{{\gamma _1}}}} \right) - h\left( {{\mu _{{\gamma _2}}}} \right)\\
-  = \int\limits_0^{ + \infty } {\left[ {PLR({\mu _{{\gamma _1}}} x) - PLR({\mu _{{\gamma _2}}} x)} \right]} \frac{{10/\ln 10}}{{\sqrt {2\pi } {\sigma _{{\gamma _{dB}}}}x}}\exp \left[ { - \frac{{{{\left( {10{{\log }_{10}}\left( x \right)} \right)}^2}}}{{2\sigma _{{\gamma _{dB}}}^2}}} \right]dx$
-Due to the ${PLR({\gamma })}$ is a monotonous decreasing function of bit SNR ${\gamma}$, $h\left( {{\mu _{{\gamma _1}}}} \right) \ge h\left( {{\mu _{{\gamma _2}}}} \right) $ is permanent establishment.
-So, we prove that the $h\left( {{\mu _{{\gamma}}}} \right)$ is a monotonous increasing function of the average of bit SNR $\mu _{{\gamma}}$.
-Further, we finally prove that the Average Packet Loss Rate is a monotonous decreasing function of the average of bit SNR.
-%If we can proof that $\forall {\text{ }}{\mu _{{\gamma _{1,dB}}}},{\mu _{{\mu _{{\gamma _{2,dB}}}}}}$, ${\mu _{{\gamma _{1,dB}}}} \ge {\mu _{{\mu _{{\gamma _{2,dB}}}}}}$,$h\left( {{\mu _{{\gamma _{1,dB}}}}} \right) \ge h\left( {{\mu _{{\mu _{{\gamma _{2,dB}}}}}}} \right)$ is permanent establishment,.
-
-\end{IEEEproof}
-
-\end{appendices}
-%\fi
-
+ 
+ 
 
 
 %% myReference
