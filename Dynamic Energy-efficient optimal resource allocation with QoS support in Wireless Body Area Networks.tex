@@ -7,6 +7,7 @@
 %% http://www.michaelshell.org/
 %% for current contact information.
 %%
+
 %% This is a skeleton file demonstrating the use of IEEEtran.cls
 %% (requires IEEEtran.cls version 1.7 or later) with an IEEE conference paper.
 %%
@@ -34,7 +35,7 @@
 
 %\usepackage[bookmarks=true]{hyperref}
 \renewcommand{\algorithmicrequire}{\textbf{Initialization:}}
-\renewcommand{\algorithmicensure}{\textbf{Itertion:}}
+\renewcommand{\algorithmicensure}{\textbf{Iteration:}}
 \renewcommand{\algorithmicreturn}{\textbf{Return:}}
 
 \newtheorem{thm}{Theorem}[section]
@@ -316,7 +317,12 @@ Since the average PLR in eq~\eqref{eqPLR} decreases with the increase of ${\mu _
 \end{equation}
 where $\mu _{th}$ is the threshold of ${\mu _{{\gamma _{dB}}}}$, which just satisfy $\overline {PLR\left( {{\mu _{{th}}},{\sigma _{{\gamma _{dB}}}}} \right)}=PLR_{th}$.
 
-Therefore, the first and second PLR constraints, in form of eq~\eqref{muPLR}, can be transformed into the form of generalized posynomials. 
+Therefore, the first and second PLR constraints, in form of eq~\eqref{muPLR}, can be transformed into the form of generalized posynomials:
+\begin{equation}\label{FinalEqPLR}
+\begin{split}
+P_{tx}{R^{{ - 1}}} & \ge {B^{ - 1}} {10^{\frac{{\mu _{th}+ PL_{Fr}\left({d}\right) + {P_{N}}}}{{10}}}} = {\theta _{th}}
+\end{split}
+\end{equation} 
 
 As for third and fourth throughput constraints, they are originally in form of generalized posynomials. However, the fifth and sixth delay constraints are not in form of generalized posynomials. But both of them are in form of the following inequality, which can be successfully transformed in the form of generalized posynomials:
 
@@ -397,7 +403,7 @@ Due to the various postures or some more strict QoS requirements, even the maxim
 
 %When PLR requirement is relax and can be satisfied through adjusting the transmission power, the maximum transmission rate is preferred, which ensures the throughput and delay requirements. However, when PLR requirement becomes more strict in several serious scenarios and cannot be meet just through adjusting the transmission power, transmission rate allocation policy (TRAP) is proposed to obtain lower PLR requirement through adjusting the transmission rate. However, reducing the transmission rate means increasing the number of allocated slots in a superframe to satisfy the throughput constraint. Therefore, when the number of needed slots is larger than the maximum available number of slots in a superframe with the desired low transmission rates, we repeatedly and carefully decide which node should raise transmission rate until the number of needed slots is less than the maximum available number.
 
-When PLR requirement is relax and can be satisfied through adjusting the transmission power, the maximum transmission rate is preferred, which ensures the throughput and delay requirements. However, when PLR requirement becomes stricter in several serious scenarios and cannot be met just through adjusting transmission power, the transmission rate allocation policy (TRAP) is proposed to obtain lower PLR through adjusting the transmission rate. 
+When PLR requirement is relax and can be satisfied through adjusting the transmission power, the maximum transmission rate is preferred, which ensures the throughput and delay requirements. However, when PLR requirement becomes stricter in several serious scenarios and cannot be met just through adjusting transmission power. For example, the patient go from bad to worse, the QoS requirements need to be correspondingly more strict. Therefore, the transmission rate allocation policy (TRAP) is proposed to obtain lower PLR through adjusting the transmission rate. 
   
 \begin{algorithm}
 \caption{Transmission Rate Allocation Policy (TRAP)}
@@ -409,6 +415,7 @@ When PLR requirement is relax and can be satisfied through adjusting the transmi
 \STATE{Calculate the transmission rate threshold ${R_{i,n,th}},{R_{i,m,th}}$ which can correspondingly satisfy ${{\theta _{i,n,th}}}$ and ${{\theta _{i,m,th}}}$ with the maximum transmission power at sensor $i$.\\
 ${R_{th}} = \frac{{{P_{tx,\max }}}}{{{\theta _{th}}}}$, $\mu _{th}^{} = 10{\log _{10}}\left( {{\theta _{th}}   B} \right) - PL_{Fr}\left(d\right) - {P_{N}}$
 }
+
 \STATE{Obtain initial ${R_{i,n,cur},R_{i,m,cur}},{\mu_{i,n,{R_{cur}}},\mu_{i,m,{R_{cur}}}}$ in accordance with ${R_{i,n,th},R_{i,m,th}}$ at sensor $i$.\\
 ${R_{cur} =}$$
 \begin{cases}
@@ -479,14 +486,14 @@ According to the PLR requirement and link quality, the hub can get the transmiss
 \end{equation}
 %where  indicates the maximum transmission power at sensor $i$. 
 
-When ${R_{i,th}}$ is larger than the maximum transmission rate, the transmission rate ${R_{i,cur}}$ at sensor $i$ is set to the maximum grade. When  ${R_{i,th}}$ is smaller than the minimum transmission rate, ${R_{i,cur}}$ is set to the minimum. Otherwise, ${R_{i,cur}}$ is chosen from the optional transmission rates, which is just smaller than ${R_{i,th}}$. Since the ${R_{i,cur}}$ is smaller than ${R_{i,th}}$, the PLR constraint~\eqref{FinalEqPLR} can be satisfied. However, reducing the transmission rate means increasing the number of allocated slots in the superframe to satisfy the throughput constraint and thus consuming more energy. Therefore, we need to limit the total number of allocated slots $sumSlot$ in a superframe to a pre-defined number $\beta \cdot totalSlot$ and raise some nodes' transmission rate to satisfy the slot number limitation. Here, $totalSlot$ is available number of slots in a superframe, and the parameter $\beta$ is within [0,1].
+If ${R_{i,th}}$ is larger than the maximum transmission rate, it means that the QoS requirements can be satisfied by adjusting the transmission power in current channel status. Then the transmission rate ${R_{i,cur}}$ at sensor $i$ is set to the maximum grade to save energy. When  ${R_{i,th}}$ is smaller than the minimum transmission rate, ${R_{i,cur}}$ is set to the minimum. Otherwise, ${R_{i,cur}}$ is chosen from the optional transmission rates, which is just smaller than ${R_{i,th}}$. Since the ${R_{i,cur}}$ is smaller than ${R_{i,th}}$, the PLR constraint~\eqref{FinalEqPLR} can be satisfied. However, reducing the transmission rate means increasing the number of allocated slots in the superframe to satisfy the throughput constraint and thus consuming more energy. Therefore, we need to limit the total number of allocated slots $sumSlot$ in a superframe to a pre-defined number $\beta \cdot totalSlot$ and raise some nodes' transmission rate to satisfy the slot number limitation. Here, $totalSlot$ is available number of slots in a superframe, and the parameter $\beta$ is within [0,1].
 %  designed to be tuned for desired trade-off between energy consumption and attainable PLR. 
 
 %we repeatedly and carefully decide which node should raise transmission rate until the number of needed slots is less than the maximum available number.
  
-Which nodes should be chosen to raise the transmission rates ${R_{cur}}$ to satisfy the slot number limitation is the key issue in TRAP. Once nodes are chosen to raise transmission rates ${R_{cur}}$, it means that their PLR constraints cannot be guaranteed. So we need to try our best to reduce the cost due to the raise of the transmission rate. For better choosing nodes, we evaluate the cost of each nodes using the following PLR cost function.
+Which nodes should be chosen to raise the transmission rates ${R_{cur}}$ to satisfy the slot number limitation is the key issue in TRAP. Once nodes are chosen to raise transmission rates ${R_{cur}}$, it means that their PLR constraints cannot be guaranteed. So we need to try our best to reduce the cost due to the raise of the transmission rate. For better choosing nodes, we evaluate the cost of each nodes using the following PLR cost function:
 
-% Here, the PLR cost function is designed to estimate the PLR increment compared with the excepted PLR while raising transmission rate. In each loop, the node which has the minimum PLR cost is chosen to raise its transmission rate. This way can avoid that one node has much larger PLR cost than the others. 
+
 %The PLR cost function is expressed as follows,
  
 \begin{equation}
@@ -501,6 +508,7 @@ Here, the difference between $\mu _{i,{R_{new}}}$ and $\mu _{i,th}$ is used to e
 %, the farther $\mu _{i,{R_{new}}}$  away from $\mu _{i,new}$ means the greater the difference between $PL{R_{i,{R_{new}}}}$ and $PL{R_{i,new}}$, and vice versa.
 
 %To avoid one node is raised too much and thus has much larger PLR cost than the others, we change the transmission rates step by step. In each step, the node which has the minimum PLR cost ${\omega }$ is chosen to adopt the candidate transmission rate $R_{new}$ as ${R_{cur}}$ and the candidate transmission rate $R_{new}$ increases one grade in the optional transmission rates. Correspondingly, the $\mu _{{R_{cur}}}$ is updated to $\mu _{{R_{new}}}$. When ${R_{cur}}$ is set to the maximum transmission rate, the corresponding PLR cost ${\omega }$ is set to $\inf$ such that it will be not chosen to raise the transmission rate.  Once the slot number limitation is satisfied or  ${\omega}$ for each node has been set to $\inf$, the loop will stop. Finally ${\theta _{th}}$ at each node for the PLR constraint is recalculated as eq.~\eqref{thetaCal} with $\mu _{{R_{cur}}}$.   
+Here, the PLR cost function is designed to estimate the PLR increment compared with the excepted PLR while raising transmission rate. In each loop, the node which has the minimum PLR cost is chosen to raise its transmission rate. This way can avoid that one node has much larger PLR cost than the others. 
 
 In TRAP, the parameter $\beta$ is designed to tune the desired trade-off between energy consumption and attainable PLR. The smaller  $\beta$ is, the stricter the slot number limitation is. Thus more nodes need to be set to the larger grade in the optional transmission rates, correspondingly stricter PLR cannot be attained, but less energy is consumed, and vice versa. The details of the proposed TRAP are described in Algorithm 1.
 %Therefore, $\beta$ is designed to be tuned for desired trade-off between energy consumption and attainable PLR. 
